@@ -1,6 +1,6 @@
 import * as React from "react";
 import { MagnifyingGlassIcon, CloudArrowUpIcon } from "@phosphor-icons/react";
-import { useToolcraftControlNavigation, useToolcraftDispatch, useToolcraftSelector } from "@/toolcraft/runtime/react";
+import { getFreeAreaCenterOffsetX, useToolcraftControlNavigation, useToolcraftDispatch, useToolcraftSelector } from "@/toolcraft/runtime/react";
 import { Button, Empty, EmptyHeader, EmptyTitle, EmptyDescription, EmptyContent, useToolcraftUiLanguage } from "@/toolcraft/ui";
 import { resolveCoverSource } from "../weave/cover-source";
 import { WEAVE_TARGETS } from "../weave/weave-params";
@@ -30,7 +30,7 @@ export function EmptyCanvasGuide() {
     navigate(target, file);
   };
   const loadExample = async () => {
-    dispatch({ type: "canvas.setViewport", zoom: 55, offset: { x: 0, y: 0 } });
+    dispatch({ type: "canvas.setViewport", zoom: 55, offset: { x: getFreeAreaCenterOffsetX(), y: 0 } });
     request.current?.abort();
     const controller = new AbortController();
     request.current = controller;

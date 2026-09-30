@@ -1,7 +1,17 @@
+import type { Page } from "@playwright/test";
 import { expect, test } from "./toolcraft-product-test";
 import { field, mockRemoteServices, quadrantCoverPng, waitForWeave } from "./lyric-weave-support";
 
 const guide = '[data-empty-canvas-guide]';
+
+async function expectCenteredInWorkspace(page: Page) {
+  await expect.poll(async () => {
+    const art = await page.locator("[data-toolcraft-finite-background-layer]").boundingBox();
+    const panel = await page.locator("[data-toolcraft-controls-panel-shell]").boundingBox();
+    const viewport = await page.locator('[data-slot="toolcraft-runtime-canvas"]').boundingBox();
+    return Math.abs(art!.x + art!.width / 2 - (viewport!.x + panel!.x) / 2);
+  }).toBeLessThan(2);
+}
 
 test("browser: empty canvas guides search, upload and lyrics without touching the artwork", async ({ page }) => {
   const errors: string[] = [];
@@ -24,6 +34,7 @@ test("browser: empty canvas guides search, upload and lyrics without touching th
   await lyrics.fill("A little light across the water");
   await waitForWeave(page);
   await expect(page.getByText("55%", { exact: true })).toBeVisible();
+  await expectCenteredInWorkspace(page);
   await expect(page.locator("[data-toolcraft-finite-background-layer]")).toBeVisible();
   await expect(page.locator(guide)).toHaveCount(0);
   await page.getByRole("button", { name: "Zoom in", exact: true }).click();
@@ -46,6 +57,7 @@ test("browser: the example loads The Meaning of Travel and undo restores the gui
   await page.getByRole("button", { name: "Try an example · The Meaning of Travel", exact: true }).click();
   await waitForWeave(page);
   await expect(page.getByText("55%", { exact: true })).toBeVisible();
+  await expectCenteredInWorkspace(page);
   await expect(page.locator("[data-toolcraft-finite-background-layer]")).toBeVisible();
   await expect(field(page, "caption.title").locator("input")).toHaveValue("旅行的意义");
   await expect(field(page, "song.language").getByRole("button", { name: "简体", exact: true })).toHaveAttribute("aria-pressed", "true");
@@ -70,6 +82,7 @@ test("browser: an unavailable example keeps the guide usable and supports retry"
   await example.click();
   await waitForWeave(page);
   await expect(page.getByText("55%", { exact: true })).toBeVisible();
+  await expectCenteredInWorkspace(page);
   await expect(page.locator("[data-toolcraft-finite-background-layer]")).toBeVisible();
   await expect(page.locator(guide)).toHaveCount(0);
 });
