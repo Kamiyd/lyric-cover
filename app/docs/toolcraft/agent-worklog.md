@@ -151,3 +151,9 @@ Skip: Measured performance — not run. The protected delivery gate — not run,
 - Replaced custom headings, typography, button overrides, spacing CSS and viewport backdrop with the existing Empty/Header/Title/Description/Content and Button variants. Icons use the existing Phosphor family; loading uses Button's built-in loading state. Shortened the introductory copy. Removed the guide CSS module entirely.
 - Kept canonical search/upload navigation and the requested song example. The guide uses the editor background token within its own bounds so text remains readable over a dark artwork background in light theme.
 - Focused verification: TypeScript passed; all four onboarding browser tests passed, including upload/lyrics, example/undo, error/retry, language and theme visibility. Reviewed dark/light screenshots and confirmed the guide avoids the panel at 1024px.
+
+### Transparent canvas guidance
+
+- Active change: transparent-canvas-guide. User asked to remove the extra background around the guide while retaining the reused components.
+- Removed the guide surface fill. Existing Empty and Button components now sit directly over the canvas. Their existing theme tokens follow the canvas background luminance (using the existing background resolver and luminance helper), so light editor chrome does not produce dark text on dark artwork. No new canvas backing or pseudo-element is added.
+- Focused validation: TypeScript and all four onboarding browser tests passed. Reviewed the light-theme screenshot: no card or additional background, readable text over the existing canvas. Search, upload, example, undo and retry remain covered.
