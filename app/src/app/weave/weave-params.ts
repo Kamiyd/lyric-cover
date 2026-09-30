@@ -2,6 +2,7 @@ export const WEAVE_FONTS = ["sans", "serif"] as const;
 export type WeaveFont = (typeof WEAVE_FONTS)[number];
 
 export const WEAVE_DENSITY = { defaultValue: 84, max: 160, min: 40, step: 2 } as const;
+export const WEAVE_BRIGHTNESS = { defaultValue: 100, max: 200, min: 0, step: 1 } as const;
 export const WEAVE_SATURATION = { defaultValue: 1.3, max: 2, min: 0.6, step: 0.05 } as const;
 export const WEAVE_UNDERLAY = { defaultValue: 0, max: 100, min: 0, step: 1 } as const;
 export const WEAVE_DEFAULT_BACKGROUND = "#0B0B0B";
@@ -11,6 +12,7 @@ export const WEAVE_TARGETS = {
   background: "appearance.background",
   captionEnabled: "caption.enabled",
   captionFade: "caption.fade",
+  brightness: "weave.brightness",
   compact: "weave.compact",
   cover: "source.cover",
   density: "weave.density",
@@ -25,6 +27,7 @@ export const WEAVE_TARGETS = {
 } as const;
 
 export type WeaveGlyphParams = Readonly<{
+  brightness: number;
   compact: boolean;
   density: number;
   font: WeaveFont;
@@ -85,6 +88,7 @@ export function readWeaveParams(values: Values): WeaveParams {
       title: text(values[WEAVE_TARGETS.title]).trim(),
     },
     glyphs: {
+      brightness: numberIn(values[WEAVE_TARGETS.brightness], WEAVE_BRIGHTNESS) / 100,
       compact: values[WEAVE_TARGETS.compact] !== false,
       density: Math.round(numberIn(values[WEAVE_TARGETS.density], WEAVE_DENSITY)),
       font,

@@ -14,6 +14,7 @@ export function weaveLayoutCacheInput(sample: CoverSample | null, glyphs: WeaveG
     "weave.density": glyphs.density,
     "weave.font": glyphs.font,
     "weave.saturation": glyphs.saturation,
+    "weave.brightness": glyphs.brightness,
     "weave.toneSize": glyphs.toneSize,
   } as const;
 }

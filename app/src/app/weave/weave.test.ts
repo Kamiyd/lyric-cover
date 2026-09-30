@@ -82,6 +82,21 @@ describe("weave layout", () => {
     expect(red(high.color[0])).toBeGreaterThan(red(low.color[0]));
   });
 
+  it("brightness scales glyph colours without changing glyph sizes", () => {
+    const sample = splitCover();
+    const normal = layoutWeave(sample, glyphParams({ saturation: 1, brightness: 1 }), measureSquare(10));
+    const dim = layoutWeave(sample, glyphParams({ saturation: 1, brightness: 0.5 }), measureSquare(10));
+    const bright = layoutWeave(sample, glyphParams({ saturation: 1, brightness: 2 }), measureSquare(10));
+    expect(normal.color[0]).toBe((230 << 16) | (40 << 8) | 40);
+    expect(dim.color[0]).toBe((115 << 16) | (20 << 8) | 20);
+    expect(bright.color[0]).toBe((255 << 16) | (80 << 8) | 80);
+    expect(dim.size).toEqual(normal.size);
+    expect(bright.x).toEqual(normal.x);
+    expect(layoutWeave(sample, glyphParams({ brightness: 0 }), measureSquare(10)).color.every(value => value === 0)).toBe(true);
+    expect(readWeaveParams({}).glyphs.brightness).toBe(1);
+    expect(readWeaveParams({ "weave.brightness": 150 }).glyphs.brightness).toBe(1.5);
+  });
+
   it("tone sizing scales glyphs with cover brightness", () => {
     const sized = layoutWeave(splitCover(), glyphParams({ toneSize: true }), measureSquare(10));
     const flat = layoutWeave(splitCover(), glyphParams({ toneSize: false }), measureSquare(10));

@@ -187,3 +187,12 @@ Skip: Measured performance — not run. The protected delivery gate — not run,
 - Active change: initial-zoom-before-render. User identified that first search generation shrank only after drawing while the example zoomed first.
 - The one-time initial viewport adjustment now runs in a layout effect when cover metadata and lyrics become available, before drawing, rather than waiting for the completed glyph count. Existing artwork and later manual viewport changes remain preserved.
 - Focused validation: TypeScript and five onboarding browser tests passed. New search regression blocks artwork requests, verifies 55% and free-area centering with zero drawn glyphs, then releases the image and verifies those values remain unchanged after generation.
+
+
+### Text brightness control
+
+- Active change: text-brightness-control. Change ID: text-brightness-control. Later feature work: add a text brightness control after text saturation.
+- Built-in continuous slider after Saturation: weave.brightness, 0–200%, default 100%. Shared layout colour output scales RGB after saturation; tone sizing continues to use the original sampled luminance. Preview/export share the layout and brightness cache key. Existing workload dimensions remain unchanged; brightness joins the saturation invalidation path.
+- Verification tier: Tier 3, focused renderer colour behavior. Run: weave layout unit tests and weave.brightness feature browser acceptance (live drag, brightness direction, reset). Skip: aggregate delivery, full browser/export matrix and measured performance because this is a localized later edit.
+- No additional workflow skill is needed for this small edit; the signed local workflow supplies the contract.
+- Verification: all 20 weave unit tests passed; the single focused Playwright brightness test passed, proving control order, live brightening before pointer release, dimming, and section reset to 100%. `git diff --check` passed. The protected `test:feature -- weave.brightness` preflight is unavailable because the existing playwright.config.ts does not match its signed config digest; no protected config or manifest was modified. The direct browser run is focused diagnostic/functional proof, not a protected feature receipt. Measured performance was not run.

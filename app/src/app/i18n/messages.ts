@@ -83,6 +83,8 @@ export const chineseMessages: Readonly<Record<string, string>> = {
   "Weave": "排字样式",
   "Density": "文字密度",
   "Saturation": "色彩饱和度",
+  "Text brightness": "文字亮度",
+  "Scales sampled glyph colours; 100% preserves their original brightness.": "调整文字采样颜色的亮度；100% 保持原始亮度。",
   "Font": "字体",
   "Sans": "黑体",
   "Serif": "宋体",

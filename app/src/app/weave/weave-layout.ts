@@ -114,7 +114,8 @@ export function layoutWeave(
           x[count] = left + (glyphWidth - (glyphSize / fontSize) * glyphWidth) / 2;
           y[count] = centreY;
           size[count] = glyphSize;
-          color[count] = ((r | 0) << 16) | ((g | 0) << 8) | (b | 0);
+          const brighten = (value: number) => Math.min(255, value * params.brightness) | 0;
+          color[count] = (brighten(r) << 16) | (brighten(g) << 8) | brighten(b);
           count += 1;
         }
       }

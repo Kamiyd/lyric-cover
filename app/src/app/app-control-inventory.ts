@@ -59,6 +59,7 @@ export const appControlSectionInventory: readonly ToolcraftControlSectionInvento
     targets: [
       "weave.density",
       "weave.saturation",
+      "weave.brightness",
       "weave.font",
       "weave.toneSize",
       "weave.compact",

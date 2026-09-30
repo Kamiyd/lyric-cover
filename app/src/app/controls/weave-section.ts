@@ -1,6 +1,7 @@
 import type { ToolcraftControlSchema } from "@/toolcraft/runtime";
 
 import {
+  WEAVE_BRIGHTNESS,
   WEAVE_DENSITY,
   WEAVE_SATURATION,
   WEAVE_TARGETS,
@@ -36,6 +37,21 @@ export const weaveSection = {
       step: WEAVE_SATURATION.step,
       target: WEAVE_TARGETS.saturation,
       type: "slider",
+    },
+    brightness: {
+      applicability: { mode: "always" },
+      defaultValue: WEAVE_BRIGHTNESS.defaultValue,
+      description: "Scales sampled glyph colours; 100% preserves their original brightness.",
+      label: "Text brightness",
+      max: WEAVE_BRIGHTNESS.max,
+      min: WEAVE_BRIGHTNESS.min,
+      performanceReason: "Brightness recolours every glyph without changing the glyph count or size.",
+      performanceRole: "responsiveness",
+      sliderValueKind: "continuous",
+      step: WEAVE_BRIGHTNESS.step,
+      target: WEAVE_TARGETS.brightness,
+      type: "slider",
+      unit: "%",
     },
     font: {
       applicability: { mode: "always" },

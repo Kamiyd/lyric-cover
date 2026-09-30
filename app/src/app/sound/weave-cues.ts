@@ -32,6 +32,7 @@ const CHOICE_TARGETS: Readonly<Record<string, readonly unknown[]>> = {
 const SLIDER_TARGETS: readonly string[] = [
   WEAVE_TARGETS.density,
   WEAVE_TARGETS.saturation,
+  WEAVE_TARGETS.brightness,
   WEAVE_TARGETS.underlay,
   "canvas.renderScale",
 ];

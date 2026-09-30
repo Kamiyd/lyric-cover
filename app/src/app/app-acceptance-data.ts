@@ -251,6 +251,23 @@ export const appAcceptance: readonly ToolcraftComponentAcceptance[] = [
   },
   {
     automated: true,
+    automatedTestName: "brightness scales glyph colours without changing glyph sizes",
+    browser: {
+      budget: "standard",
+      file: WEAVE_SPEC,
+      testName: "browser acceptance: brightness drag brightens glyphs live",
+    },
+    componentType: "slider",
+    evidence: "rendered-pixels",
+    expectedObservable: "Dragging Text brightness changes glyph luminance during the drag while preserving glyph size.",
+    fixture: "uploaded cover with lyrics",
+    id: "weave.brightness",
+    kind: "control",
+    target: "weave.brightness",
+    userAction: "Drag the Text brightness slider.",
+  },
+  {
+    automated: true,
     automatedTestName: "font switches the glyph family",
     browser: {
       budget: "standard",
