@@ -1,3 +1,4 @@
+import { expectToolcraftControlApplicabilityState } from "./browser-control-applicability-evidence";
 import { readToolcraftBrowserObservation } from "./browser-proof-session";
 import { expectToolcraftMediaLifecycle } from "./browser-state-evidence-helpers";
 import {
@@ -258,6 +259,24 @@ test("browser acceptance: soft fade replaces the solid caption strip", async ({ 
   await captionTitle(page).fill("旅行的意义");
   await captionTitle(page).blur();
   await waitForWeave(page);
+  for (const enabled of [false, true]) {
+    await expectToolcraftControlApplicabilityState(
+      session,
+      session.controlAction("caption.enabled", async (control) => {
+        await control.getByRole("switch").click();
+      }),
+      {
+        selectorControlType: "switch",
+        selectorLabel: "Show strip",
+        selectorTarget: "caption.enabled",
+        selectorValue: enabled,
+        target: "caption.fade",
+        expectation: enabled ? "visible" : "hidden",
+      },
+      { baseRequirementId: "caption.fade" },
+    );
+  }
+  await waitForWeave(page);
   const middle = await readCoverBox(page, 540, 300);
   const solidEdge = await readCoverBox(page, 540, 530); // solid strip: full strength up to the cut
   expect(solidEdge.painted).toBeGreaterThan(0);
@@ -276,7 +295,7 @@ test("browser acceptance: soft fade replaces the solid caption strip", async ({ 
     session.controlAction("caption.fade", async (control) => {
       await control.getByRole("switch").click();
     }),
-    { requirementId: "caption.fade" },
+    { requirementId: "caption.fade#applicability:caption.enabled=true:visible" },
   );
   const fading = await readCoverBox(page, 540, 530);
   expect(fading.painted).toBeGreaterThan(0);

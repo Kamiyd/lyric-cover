@@ -27,7 +27,7 @@ describe("Toolcraft starter performance lifecycle", () => {
       scripts?: Record<string, string>;
     };
     const generatedAppTestScript =
-      packageJson.scripts?.["test:generated"] ?? packageJson.scripts?.test;
+      packageJson.scripts?.["test:toolcraft"] ?? packageJson.scripts?.["test:generated"] ?? packageJson.scripts?.test;
 
     expect(requiredPackageScriptNames).toEqual(expectedRequiredPackageScriptNames);
     for (const scriptName of requiredPackageScriptNames) {
@@ -46,7 +46,12 @@ describe("Toolcraft starter performance lifecycle", () => {
       "node scripts/check-toolcraft-docs.mjs && node --test scripts/*.test.mjs && vitest run src --passWithNoTests --reporter=default --reporter=./scripts/toolcraft-vitest-runtime-evidence-reporter.mjs";
     const generatedTestScript =
       "node scripts/check-toolcraft-docs.mjs && node scripts/check-toolcraft-integrity.mjs && node --test scripts/*.test.mjs && vitest run src --passWithNoTests --reporter=default --reporter=./scripts/toolcraft-vitest-runtime-evidence-reporter.mjs";
-    if (packageJson.scripts?.["test:generated"]) {
+    if (packageJson.scripts?.["test:toolcraft"]) {
+      expect(packageJson.scripts.test).toBe("tsc -p tsconfig.json --noEmit && vitest run src");
+      expect(packageJson.scripts["test:toolcraft"]).toBe(generatedTestScript);
+      expect(packageJson.scripts["test:toolcraft:integrity"]).toBe("node scripts/check-toolcraft-integrity.mjs");
+      expect(packageJson.scripts["test:browser"]).toBe("playwright test e2e/app-controls.spec.ts e2e/product-*.spec.ts --workers=1");
+    } else if (packageJson.scripts?.["test:generated"]) {
       expect(packageJson.scripts.test).toBe(sourceTestScript);
       expect(packageJson.scripts["test:generated"]).toBe(generatedTestScript);
     } else {
@@ -58,7 +63,7 @@ describe("Toolcraft starter performance lifecycle", () => {
       "Generated app tests must invoke the Toolcraft integrity checker.",
     ).toContain("node scripts/check-toolcraft-integrity.mjs");
     expect(
-      packageJson.scripts?.["test:browser"],
+      packageJson.scripts?.["test:toolcraft:browser"] ?? packageJson.scripts?.["test:browser"],
       "Generated apps must keep measured performance and kernel benchmark scenarios out of the default browser acceptance gate.",
     ).toBe(
       'playwright install chromium && playwright test --grep-invert "browser perf:|toolcraft kernel:"',

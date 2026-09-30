@@ -161,6 +161,8 @@ export default defineConfig({
   ],
   use: {
     ...devices["Desktop Chrome"],
+    // The separate headless shell exits early in repeated canvas tests on macOS.
+    channel: "chromium",
     baseURL: testBaseUrl,
     viewport: { height: 720, width: 1280 },
     trace: "retain-on-failure",

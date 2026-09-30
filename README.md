@@ -45,16 +45,17 @@ Changes unrelated to sound land on `main` first and are then merged into `sound`
 
 ```bash
 cd app
-pnpm exec tsc -p tsconfig.json --noEmit      # type check
-pnpm exec vitest run src                     # unit tests
-pnpm exec playwright test e2e/app-controls.spec.ts e2e/product-song.spec.ts --workers=1   # browser tests
+pnpm test                                  # type check and unit tests under src
+pnpm exec playwright install chromium      # install once before browser tests
+pnpm test:browser                          # application browser tests (serial)
+pnpm build                                 # production build
 ```
 
-Run the browser tests with `--workers=1`. In parallel, the first page load of each worker can time out.
+`pnpm test:browser` covers app controls, song workflows, and interface language; the sound branch also includes sound tests. It uses `--workers=1` to avoid parallel first-load timeouts. `pnpm test` retains application and framework unit tests under `src`, without running the upstream signed integrity check.
 
 ## Data sources and copyright
 
-- Covers and song details come from the [iTunes Search API](https://performance-partners.apple.com/search-api), lyrics from [LRCLIB](https://lrclib.net), and fonts from Google Fonts. Your browser makes these requests directly. The project has no server of its own and stores nothing.
+- Covers and song details come from the [iTunes Search API](https://performance-partners.apple.com/search-api), lyrics from [LRCLIB](https://lrclib.net), and fonts from Google Fonts. Your browser makes these requests directly. The project has no server of its own. Settings, workspace state, and uploaded media are stored locally in your browser so they can be restored after a reload. Clearing this site’s browser data removes those local records.
 - Album covers and lyrics belong to their rights holders. This repository contains no cover images and no lyrics. Keep the images you make for personal enjoyment and sharing, and get permission before any commercial use.
 - These are third-party services; their availability and terms are their own.
 
@@ -70,7 +71,14 @@ That copy has local modifications:
 - the Export button shows a busy state while an export runs, and the footer progress line is thicker;
 - export file names can come from the app state and keep non-Latin characters.
 
-Because of these changes, Toolcraft's own integrity check (part of `pnpm test` and `pnpm verify:delivery`) does not pass. This is expected.
+Because of these changes, Toolcraft's original signed integrity check reports differences from the upstream copy. This is separate from application behavior tests and does not certify the local copy as an upstream release.
+
+- `pnpm test:toolcraft:integrity`: run the original integrity check alone; currently expected to fail.
+- `pnpm test:toolcraft`: preserve the original full verification command, which stops at the integrity check.
+- `pnpm test:toolcraft:browser`: preserve the original framework browser test command.
+- `pnpm verify:delivery`: the original delivery verification is also subject to the integrity check.
+
+The upstream checker and signed manifests are unchanged. For everyday development, use `pnpm test`, `pnpm test:browser`, and `pnpm build` above.
 
 ## License
 
