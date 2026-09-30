@@ -1,6 +1,7 @@
 import * as React from "react";
 import { createRoot } from "react-dom/client";
 import { RouterProvider } from "@tanstack/react-router";
+import { Analytics } from "@vercel/analytics/react";
 
 import { router } from "./router";
 import "./styles.css";
@@ -14,5 +15,6 @@ if (!rootElement) {
 createRoot(rootElement).render(
   <React.StrictMode>
     <RouterProvider router={router} />
+    <Analytics mode={import.meta.env.PROD ? "production" : "development"} />
   </React.StrictMode>,
 );
