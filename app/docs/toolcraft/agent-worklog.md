@@ -144,3 +144,10 @@ Skip: Measured performance — not run. The protected delivery gate — not run,
 - The example uses the existing iTunes/LRCLIB pipeline on demand, with no bundled album art or song lyrics. Its metadata, lyrics and Chinese song-language selection share one undo step. It supports retry and cancels when the user starts their own work. Live iTunes metadata lookup returned the intended title and artist; automated tests mock the external services.
 - Browser plugin not available; used the existing Playwright workflow. Flow: empty app → search focus / upload → lyrics → artwork; example → artwork → undo; failed example → retry; Chinese/English and dark/light themes. Reviewed screenshots at 1440×960 and layout at the 1024px desktop minimum. Mobile continues to use the existing desktop-only entry gate.
 - Validation: 741 unit tests passed (9 existing optional skips), full 13-test app browser suite passed, then all 4 onboarding tests passed again after adding explicit example-language/undo checks. No console/page errors in the upload-to-artwork flow. Screenshot evidence saved outside the repository.
+
+### Reuse the existing empty-state design
+
+- Active change: empty-guide-component-reuse. Later focused visual edit: reuse the existing components and design instead of custom styling.
+- Replaced custom headings, typography, button overrides, spacing CSS and viewport backdrop with the existing Empty/Header/Title/Description/Content and Button variants. Icons use the existing Phosphor family; loading uses Button's built-in loading state. Shortened the introductory copy. Removed the guide CSS module entirely.
+- Kept canonical search/upload navigation and the requested song example. The guide uses the editor background token within its own bounds so text remains readable over a dark artwork background in light theme.
+- Focused verification: TypeScript passed; all four onboarding browser tests passed, including upload/lyrics, example/undo, error/retry, language and theme visibility. Reviewed dark/light screenshots and confirmed the guide avoids the panel at 1024px.
