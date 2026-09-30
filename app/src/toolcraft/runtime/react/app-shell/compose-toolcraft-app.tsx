@@ -46,6 +46,7 @@ export function composeToolcraftApp(
   });
 
   return Object.freeze({
+    ...(portSnapshot.scene?.workspaceOverlay === undefined ? {} : { workspaceOverlay: portSnapshot.scene.workspaceOverlay }),
     ...(portSnapshot.scene?.canvasContent === undefined
       ? {}
       : { canvasContent: portSnapshot.scene.canvasContent }),

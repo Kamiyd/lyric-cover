@@ -11,6 +11,7 @@ import {
 import type { ToolcraftState } from "../../state/types";
 import type { ToolcraftProductExportRenderer } from "../../export/product-export-renderer";
 import type { ToolcraftProductSvgExportRenderer } from "../../export/product-svg-export-renderer";
+import { WorkspaceOverlay } from "./workspace-overlay";
 import { CanvasShell } from "../canvas/canvas-shell";
 import { ToolcraftProductSceneBoundsBoundary } from "../canvas/product-scene-surface";
 import {
@@ -36,6 +37,7 @@ import { ToolcraftPersistenceConflictNotice } from "./toolcraft-persistence-conf
 
 export type ToolcraftAppComposition = Readonly<{
   canvasContent?: React.ReactNode;
+  workspaceOverlay?: React.ReactNode;
   controlRenderers?: ToolcraftControlRendererMap;
   exportRenderer?: ToolcraftProductExportRenderer;
   infiniteCanvasContent?: React.ReactNode;
@@ -66,6 +68,7 @@ function cn(...classNames: Array<string | false | null | undefined>): string {
 
 function ToolcraftAppContent({
   canvasContent,
+  workspaceOverlay,
   className,
   controlRenderers,
   infiniteCanvasContent,
@@ -118,6 +121,7 @@ function ToolcraftAppContent({
           {canvasContent}
         </CanvasShell>
       ) : null}
+      {workspaceOverlay ? <WorkspaceOverlay>{workspaceOverlay}</WorkspaceOverlay> : null}
       {modulePanels.filter(({ binding }) => binding.slot === "before-controls")
         .map(panel => <React.Fragment key={panel.moduleId}>{panel.binding.render()}</React.Fragment>)}
       {controlsPanel}

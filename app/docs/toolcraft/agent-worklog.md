@@ -136,3 +136,11 @@ Skip: Measured performance — not run. The protected delivery gate — not run,
 - With no saved UI language, choose Chinese or English from browser language preferences; retain saved manual choices as the priority and English as the fallback.
 - Added a browser regression proving a Chinese browser starts in Chinese and an explicit English choice survives reload. The existing language-switch/artwork-persistence scenario remains intact.
 - Main validation: TypeScript and both interface-language browser tests passed.
+
+### Restrained empty-canvas guide
+
+- User requested a minimal guide matching the existing UI and explicitly chose 陈绮贞《旅行的意义》 as the example.
+- Added viewport-space editor overlay and canonical control navigation ports. Product-owned guidance uses existing buttons and theme tokens; it offers search, file selection, and a smaller example link. A cover without lyrics prompts for lyrics; supplied lyrics without a cover preserve the text and request a cover. The guide disappears once both inputs exist and stays outside exports.
+- The example uses the existing iTunes/LRCLIB pipeline on demand, with no bundled album art or song lyrics. Its metadata, lyrics and Chinese song-language selection share one undo step. It supports retry and cancels when the user starts their own work. Live iTunes metadata lookup returned the intended title and artist; automated tests mock the external services.
+- Browser plugin not available; used the existing Playwright workflow. Flow: empty app → search focus / upload → lyrics → artwork; example → artwork → undo; failed example → retry; Chinese/English and dark/light themes. Reviewed screenshots at 1440×960 and layout at the 1024px desktop minimum. Mobile continues to use the existing desktop-only entry gate.
+- Validation: 741 unit tests passed (9 existing optional skips), full 13-test app browser suite passed, then all 4 onboarding tests passed again after adding explicit example-language/undo checks. No console/page errors in the upload-to-artwork flow. Screenshot evidence saved outside the repository.

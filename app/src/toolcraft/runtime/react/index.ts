@@ -59,3 +59,5 @@ export {
 } from "./app-shell/use-toolcraft";
 
 export * from "./app-shell/toolcraft-defaults-authoring";
+
+export { useToolcraftControlNavigation } from "./app-shell/use-control-navigation";
