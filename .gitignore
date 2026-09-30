@@ -1,0 +1,12 @@
+# Local-only leftovers: early single-file prototypes and their backups
+/*.html
+backup/
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.idea
+.vscode/
+
+# Agent and tool state
+.claude/settings.local.json

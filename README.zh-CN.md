@@ -1,0 +1,77 @@
+# Lyric Cover
+
+[English](README.md) | 简体中文
+
+用一首歌的歌词，把它的专辑封面重新排出来。
+
+每个字取封面上对应位置的颜色：远看是封面，近看是歌词。
+
+## 为什么做这个
+
+看到有人用专辑封面做花束，才发现"把喜欢的专辑变成一件能送人的东西"这么能提供情绪价值。Lyric Cover 是同一个念头的数字版：不用花，用这首歌自己的词。
+
+## 怎么用
+
+1. 先选歌曲语言，再搜一首歌；或者自己上传封面、粘贴歌词。
+2. 调文字密度、饱和度、字体，决定要不要在底部显示歌名和歌手。
+3. 导出 PNG 或 JPG（2K / 4K / 8K），文件名是"歌名-歌手"。
+
+歌曲语言可以选简体、繁體或 English，歌名、歌手和歌词会用对应的文字。界面本身可以在中文和英文之间切换。
+
+## 运行
+
+```bash
+cd app
+pnpm install
+pnpm dev
+```
+
+需要联网：封面来自 iTunes Search，歌词来自 LRCLIB，字体来自 Google Fonts。
+
+## 目录
+
+应用在 `app/` 里，基于 Toolcraft；产品自己的代码在 `app/src/app/` 下。
+
+## 分支
+
+| 分支 | 区别 |
+|---|---|
+| `main` | 没有界面音效 |
+| `sound` | `main` 加上界面音效，其余完全相同 |
+
+和声音无关的修改都先做在 `main` 上，再合并到 `sound`。
+
+## 开发
+
+```bash
+cd app
+pnpm exec tsc -p tsconfig.json --noEmit      # 类型检查
+pnpm exec vitest run src                     # 单元测试
+pnpm exec playwright test e2e/app-controls.spec.ts e2e/product-song.spec.ts --workers=1   # 浏览器测试
+```
+
+浏览器测试请用 `--workers=1` 串行运行，并行时每个进程的首次页面加载可能超时。
+
+## 数据来源与版权
+
+- 封面和歌曲信息来自 [iTunes Search API](https://performance-partners.apple.com/search-api)，歌词来自 [LRCLIB](https://lrclib.net)，字体来自 Google Fonts。这些请求都由你的浏览器直接发出，本项目没有自己的服务器，也不保存任何数据。
+- 专辑封面和歌词的版权属于各自的权利人。本仓库不包含任何封面图片或歌词文本。用它生成的图片请只作个人欣赏和分享，商用前请自行取得授权。
+- 上述接口都是第三方服务，可用性和使用条款以它们自己的说明为准。
+
+## 关于 Toolcraft
+
+`app/` 由 [Toolcraft](https://toolcraft.sh) 生成，其中 `app/src/toolcraft/` 是 Toolcraft 运行时的副本（MIT，见 `app/LICENSE.md` 和 `app/NOTICE.md`）。
+
+这份副本做过本地修改：
+
+- 工具栏里的界面语言切换，以及一个很小的本地化层；
+- 可以关闭无限画布的选项；
+- 画布和工具栏在参数面板旁边的可用区域里居中，工具栏缩放保持这个中心；
+- 导出进行时，导出按钮显示等待状态，底部进度线加粗；
+- 导出文件名可以取自应用状态，并保留非拉丁字符。
+
+因为这些修改，Toolcraft 自带的完整性校验（`pnpm test` 和 `pnpm verify:delivery` 的一部分）不会通过，这是已知情况。
+
+## 许可
+
+本项目自身的代码以 [MIT 许可](LICENSE)发布。第三方代码各自遵循其许可。

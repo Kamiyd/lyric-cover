@@ -1,0 +1,84 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.status {
+  color: var(--muted-foreground);
+  font-size: 12px;
+  line-height: 16px;
+  margin: 0;
+  min-height: 16px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.status[data-state="error"] {
+  color: var(--destructive);
+}
+
+.viewport {
+  max-height: 272px;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr) auto;
+  gap: 10px;
+  height: auto;
+  justify-content: stretch;
+  padding-block: 5px;
+  text-align: left;
+  width: 100%;
+}
+
+.thumb {
+  border-radius: var(--radius-sm, 4px);
+  display: block;
+  height: 36px;
+  object-fit: cover;
+  pointer-events: none;
+  width: 36px;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  pointer-events: none;
+}
+
+.title,
+.meta {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.title {
+  color: var(--foreground);
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.meta {
+  color: var(--muted-foreground);
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.duration {
+  color: var(--muted-foreground);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+}
