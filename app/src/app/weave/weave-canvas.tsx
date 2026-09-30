@@ -39,6 +39,7 @@ export function WeaveCanvas(): React.JSX.Element {
   const mediaAssets = useToolcraftSelector((state) => state.mediaAssets);
   const canvasSize = useToolcraftSelector((state) => state.canvas.size);
   const canvasMode = useToolcraftSelector((state) => state.canvas.mode);
+  const viewport = useToolcraftSelector((state) => state.canvas);
   const dispatch = useToolcraftDispatch();
   const renderScale = readRenderScale(useToolcraftValue("canvas.renderScale"));
   const coverAssets = React.useMemo(() => getUploadedCovers(mediaAssets), [mediaAssets]);
@@ -52,6 +53,19 @@ export function WeaveCanvas(): React.JSX.Element {
   const [painted, setPainted] = React.useState(false);
   const rasterRun = React.useRef(0);
   const [composed, setComposed] = React.useState<WeaveRaster | null>(null);
+  const initialZoomApplied = React.useRef(Boolean(source && params.glyphs.lyrics.trim()));
+  React.useEffect(() => {
+    if (initialZoomApplied.current || glyphCount === 0) return;
+    initialZoomApplied.current = true;
+    // Start fresh output at a comfortable scale; retain an already chosen viewport.
+    if (viewport.zoom !== 100) return;
+    dispatch({
+      type: "canvas.setViewport",
+      zoom: 55,
+      offset: { x: viewport.offset.x * 0.55, y: viewport.offset.y * 0.55 },
+    });
+  }, [dispatch, glyphCount, viewport]);
+
 
   const frameWidth = frame.kind === "ready" ? frame.rect.width : 0;
   const frameHeight = frame.kind === "ready" ? frame.rect.height : 0;

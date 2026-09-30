@@ -23,10 +23,17 @@ test("browser: empty canvas guides search, upload and lyrics without touching th
   await expect(lyrics).toBeFocused();
   await lyrics.fill("A little light across the water");
   await waitForWeave(page);
+  await expect(page.getByText("55%", { exact: true })).toBeVisible();
   await expect(page.locator("[data-toolcraft-finite-background-layer]")).toBeVisible();
   await expect(page.locator(guide)).toHaveCount(0);
+  await page.getByRole("button", { name: "Zoom in", exact: true }).click();
+  await expect(page.getByText("65%", { exact: true })).toBeVisible();
+  await lyrics.fill("Another little light across the water");
+  await waitForWeave(page);
+  await expect(page.getByText("65%", { exact: true })).toBeVisible();
   await page.reload();
   await waitForWeave(page);
+  await expect(page.getByText("65%", { exact: true })).toBeVisible();
   await expect(page.locator("[data-toolcraft-finite-background-layer]")).toBeVisible();
   await expect(page.locator(guide)).toHaveCount(0);
   expect(errors).toEqual([]);
@@ -38,6 +45,7 @@ test("browser: the example loads The Meaning of Travel and undo restores the gui
   await field(page, "song.language").getByRole("button", { name: "English", exact: true }).click();
   await page.getByRole("button", { name: "Try an example · The Meaning of Travel", exact: true }).click();
   await waitForWeave(page);
+  await expect(page.getByText("55%", { exact: true })).toBeVisible();
   await expect(page.locator("[data-toolcraft-finite-background-layer]")).toBeVisible();
   await expect(field(page, "caption.title").locator("input")).toHaveValue("旅行的意义");
   await expect(field(page, "song.language").getByRole("button", { name: "简体", exact: true })).toHaveAttribute("aria-pressed", "true");
@@ -61,6 +69,7 @@ test("browser: an unavailable example keeps the guide usable and supports retry"
   fail = false;
   await example.click();
   await waitForWeave(page);
+  await expect(page.getByText("55%", { exact: true })).toBeVisible();
   await expect(page.locator("[data-toolcraft-finite-background-layer]")).toBeVisible();
   await expect(page.locator(guide)).toHaveCount(0);
 });
