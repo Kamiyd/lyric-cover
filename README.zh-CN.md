@@ -45,16 +45,17 @@ pnpm dev
 
 ```bash
 cd app
-pnpm exec tsc -p tsconfig.json --noEmit      # 类型检查
-pnpm exec vitest run src                     # 单元测试
-pnpm exec playwright test e2e/app-controls.spec.ts e2e/product-song.spec.ts --workers=1   # 浏览器测试
+pnpm test                                  # 类型检查和 src 下的单元测试
+pnpm exec playwright install chromium      # 首次运行浏览器测试前安装
+pnpm test:browser                          # 应用浏览器测试（串行）
+pnpm build                                 # 生产构建
 ```
 
-浏览器测试请用 `--workers=1` 串行运行，并行时每个进程的首次页面加载可能超时。
+`pnpm test:browser` 覆盖应用控件、歌曲流程和界面语言；音效分支还包含音效测试。命令已设置 `--workers=1`，避免并行首次加载超时。`pnpm test` 保留 `src` 下的应用和框架单元测试，不运行上游签名完整性校验。
 
 ## 数据来源与版权
 
-- 封面和歌曲信息来自 [iTunes Search API](https://performance-partners.apple.com/search-api)，歌词来自 [LRCLIB](https://lrclib.net)，字体来自 Google Fonts。这些请求都由你的浏览器直接发出，本项目没有自己的服务器，也不保存任何数据。
+- 封面和歌曲信息来自 [iTunes Search API](https://performance-partners.apple.com/search-api)，歌词来自 [LRCLIB](https://lrclib.net)，字体来自 Google Fonts。这些请求都由你的浏览器直接发出，本项目没有自己的服务器；设置、工作状态和上传素材会保存在你的浏览器本地，以便刷新后恢复。清除本站浏览器数据会删除这些本地记录。
 - 专辑封面和歌词的版权属于各自的权利人。本仓库不包含任何封面图片或歌词文本。用它生成的图片请只作个人欣赏和分享，商用前请自行取得授权。
 - 上述接口都是第三方服务，可用性和使用条款以它们自己的说明为准。
 
@@ -70,7 +71,14 @@ pnpm exec playwright test e2e/app-controls.spec.ts e2e/product-song.spec.ts --wo
 - 导出进行时，导出按钮显示等待状态，底部进度线加粗；
 - 导出文件名可以取自应用状态，并保留非拉丁字符。
 
-因为这些修改，Toolcraft 自带的完整性校验（`pnpm test` 和 `pnpm verify:delivery` 的一部分）不会通过，这是已知情况。
+因为这些修改，Toolcraft 原始签名完整性校验会报告与上游副本的差异。这不是应用功能测试，也不代表本地副本获得了上游认证。
+
+- `pnpm test:toolcraft:integrity`：单独检查原始完整性，当前预期失败。
+- `pnpm test:toolcraft`：保留原来的完整验证命令，会在完整性检查处失败。
+- `pnpm test:toolcraft:browser`：保留原来的框架浏览器测试命令。
+- `pnpm verify:delivery`：原始交付验证同样受完整性检查限制。
+
+上游校验器和签名清单保持原样；日常开发使用上面的 `pnpm test`、`pnpm test:browser` 和 `pnpm build`。
 
 ## 界面音效（本分支）
 

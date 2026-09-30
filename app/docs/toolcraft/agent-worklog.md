@@ -125,3 +125,13 @@ Skip: Measured performance — not run. The protected delivery gate — not run,
 - Decision: interface sounds use `cuelume` (MIT, synthesized with Web Audio, no audio files). Cues are chosen by each control's job in `src/app/sound/weave-cues.ts`: switches → `toggle`; choices → `select` with direction; slider steps → `select`, rate-limited; text edits → `type`; a picked song → one `select`; reset → `close`; a newly woven cover → `ready`; a slow cover → `loading`; a settled export → `success` or `error`. Toolbar buttons and the Export button play `tap` through `data-cuelume-tap`.
 - Preference: a mute button in the bottom toolbar, stored per app outside workspace values, history and reset. Volume is the library's maximum.
 - Evidence: `src/app/sound/*`, `e2e/product-sound.spec.ts`.
+
+### Open-source contributor checks and storage documentation
+
+- User explicitly requested replacing the failing default test entry point with application checks and correcting both READMEs; dependency and bundle pruning remain out of scope.
+- `test` now runs TypeScript and the existing source unit suite. Original Toolcraft verification and browser commands remain available as `test:toolcraft` and `test:toolcraft:browser`, with `test:toolcraft:integrity` for the signed check alone. The integrity checker and signed manifests were not edited.
+- Updated the lifecycle contract test to verify the new application commands and the preserved upstream commands. Added missing caption-fade applicability evidence through real caption switch actions and retained rendered-pixel assertions.
+- Both READMEs now explain browser-local settings, workspace and media persistence, browser installation, application tests, and the expected failure of upstream integrity checks on this modified copy.
+- `pnpm test` passed: 745 tests passed, 9 existing optional tests skipped. Initial browser run exposed missing caption applicability evidence and a Playwright connection error; browser verification is rerun after the evidence fix.
+- Final browser validation: all 9 application tests passed in an isolated worktree of `sound` plus this change. Concurrent language edits in the main checkout were preserved and excluded from that verification snapshot. Chromium headless-shell repeatedly exited mid-suite on this host; using the full Chromium headless channel completed the suite. The Playwright config now selects that channel; no dependency versions changed.
+- Branch synchronization: `main` passed 741 unit tests (9 existing optional skips) and all 8 application browser tests. `sound` previously passed 745 unit tests and all 9 browser tests. Common contributor changes are committed on `main` and merged into `sound`, retaining the sound-only features.
