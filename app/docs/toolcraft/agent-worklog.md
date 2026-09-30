@@ -175,3 +175,9 @@ Skip: Measured performance — not run. The protected delivery gate — not run,
 - Active change: initial-free-area-center. User clarified that initial artwork must center in the left available workspace, excluding the controls panel.
 - Extracted the existing toolbar free-area calculation into a shared runtime helper. First-generation 55% zoom and example loading now use that same center, instead of scaling the previous offset or resetting it to the full-page origin.
 - Focused validation: TypeScript and four onboarding browser tests passed. Added geometric assertions comparing artwork center to the midpoint between viewport left and controls-panel left for both uploaded and example artwork. Manual zoom persistence remains covered.
+
+### Set initial zoom before rendering
+
+- Active change: initial-zoom-before-render. User identified that first search generation shrank only after drawing while the example zoomed first.
+- The one-time initial viewport adjustment now runs in a layout effect when cover metadata and lyrics become available, before drawing, rather than waiting for the completed glyph count. Existing artwork and later manual viewport changes remain preserved.
+- Focused validation: TypeScript and five onboarding browser tests passed. New search regression blocks artwork requests, verifies 55% and free-area centering with zero drawn glyphs, then releases the image and verifies those values remain unchanged after generation.

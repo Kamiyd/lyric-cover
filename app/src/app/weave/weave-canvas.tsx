@@ -54,8 +54,8 @@ export function WeaveCanvas(): React.JSX.Element {
   const rasterRun = React.useRef(0);
   const [composed, setComposed] = React.useState<WeaveRaster | null>(null);
   const initialZoomApplied = React.useRef(Boolean(source && params.glyphs.lyrics.trim()));
-  React.useEffect(() => {
-    if (initialZoomApplied.current || glyphCount === 0) return;
+  React.useLayoutEffect(() => {
+    if (initialZoomApplied.current || !source || !params.glyphs.lyrics.trim()) return;
     initialZoomApplied.current = true;
     // Start fresh output at a comfortable scale; retain an already chosen viewport.
     if (viewport.zoom !== 100) return;
@@ -64,7 +64,7 @@ export function WeaveCanvas(): React.JSX.Element {
       zoom: 55,
       offset: { x: getFreeAreaCenterOffsetX(), y: 0 },
     });
-  }, [dispatch, glyphCount, viewport]);
+  }, [dispatch, source, params.glyphs.lyrics, viewport]);
 
 
   const frameWidth = frame.kind === "ready" ? frame.rect.width : 0;

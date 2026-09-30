@@ -108,3 +108,31 @@ test("browser: the guide uses the interface language and both themes", async ({ 
   const panel = await page.locator('[data-toolcraft-controls-panel-shell]').boundingBox();
   expect(box!.x + box!.width).toBeLessThan(panel!.x);
 });
+
+
+test("browser: first searched cover is at 55 percent before artwork loads", async ({ page }) => {
+  await mockRemoteServices(page);
+  let release!: () => void;
+  const gate = new Promise<void>(resolve => { release = resolve; });
+  await page.route("https://is1-ssl.mzstatic.com/**", async route => {
+    await gate;
+    await route.fallback();
+  });
+  await page.goto("/");
+  const search = page.locator('[data-song-search] input');
+  await search.fill("旅行的意义");
+  await expect(page.locator('[data-song-search-status]')).toContainText("2 results");
+  await search.press("ArrowDown");
+  await search.press("Enter");
+  try {
+    await expect(field(page, "song.lyrics").locator("textarea")).not.toHaveValue("");
+    await expect(page.getByText("55%", { exact: true })).toBeVisible();
+    await expectCenteredInWorkspace(page);
+    await expect(page.locator("canvas[data-weave-canvas]")).toHaveAttribute("data-glyph-count", "0");
+  } finally {
+    release();
+  }
+  await waitForWeave(page);
+  await expect(page.getByText("55%", { exact: true })).toBeVisible();
+  await expectCenteredInWorkspace(page);
+});
