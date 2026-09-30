@@ -91,6 +91,7 @@ export function resolveToolcraftToolbar({
   return {
     history: toolbar?.history ?? canvasEnabled,
     language: toolbar?.language ?? false,
+    sound: toolbar?.sound ?? false,
     radar: toolbar?.radar ?? canvasEnabled,
     theme: toolbar?.theme ?? true,
     zoom: toolbar?.zoom ?? canvasEnabled,

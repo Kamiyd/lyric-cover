@@ -72,6 +72,14 @@ pnpm exec playwright test e2e/app-controls.spec.ts e2e/product-song.spec.ts --wo
 
 因为这些修改，Toolcraft 自带的完整性校验（`pnpm test` 和 `pnpm verify:delivery` 的一部分）不会通过，这是已知情况。
 
+## 界面音效（本分支）
+
+这个分支用 [cuelume](https://github.com/danielwh2/cuelume)（MIT）加了简短的合成界面音效：开关、选项和滑杆刻度、打字按键，以及封面织完、导出完成、出错时的提示音。底部工具栏的喇叭按钮可以静音，设置会被记住。
+
+依赖 `cuelume@0.2.4`。如果你用的 npm 镜像还没有同步这个版本，请从官方源安装：`pnpm install --registry https://registry.npmjs.org/`。
+
+本分支对 Toolcraft 副本的额外修改：工具栏里的音效偏好和静音按钮、工具栏与导出按钮上的 `data-cuelume-tap`、公开导出状态的接口。
+
 ## 许可
 
 本项目自身的代码以 [MIT 许可](LICENSE)发布。第三方代码各自遵循其许可。

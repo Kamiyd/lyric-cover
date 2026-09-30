@@ -3,6 +3,7 @@ export * from "./app-shell/toolcraft-root";
 export * from "./app-shell/toolcraft-app";
 export { composeToolcraftApp } from "./app-shell/compose-toolcraft-app";
 export type { ToolcraftAppPorts, ToolcraftAppScenePorts } from "./app-shell/toolcraft-app-ports";
+export { useToolcraftExportOwner } from "./app-shell/toolcraft-export-context";
 export { useToolcraftMediaPresentationUrls } from "./app-shell/toolcraft-media-presentation";
 export * from "./app-shell/use-toolcraft-pipeline";
 export * from "./app-shell/use-toolcraft-pipeline-pass";

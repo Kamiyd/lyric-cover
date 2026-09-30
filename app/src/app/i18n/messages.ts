@@ -117,6 +117,8 @@ export const chineseMessages: Readonly<Record<string, string>> = {
   "Light theme": "浅色主题",
   "Dark theme": "深色主题",
   "Center canvas": "画布居中",
+  "Mute sounds": "关闭音效",
+  "Turn sounds on": "开启音效",
   "Controls": "参数",
   "Collapse": "收起",
   "Expand": "展开",

@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { ToolcraftUiLanguageProvider } from "@/toolcraft/ui";
+import { ToolcraftUiLanguageProvider, ToolcraftUiSoundProvider } from "@/toolcraft/ui";
 import { ToolcraftHistoryContext, createRuntimeHistoryPort, requestToolcraftHistory } from './history-scope';
 
 import type { AnyToolcraftRendererPipelineRegistration } from "../../rendering";
@@ -181,6 +181,7 @@ export function ToolcraftRoot({
 
   const workspace = (
     <ToolcraftUiLanguageProvider appId={schema.identity.id}>
+    <ToolcraftUiSoundProvider appId={schema.identity.id}>
     <ToolcraftStoreContext.Provider value={store}>
         <ToolcraftSourceAssetProvider store={store}>
           <ToolcraftExportProvider store={store}>
@@ -190,6 +191,7 @@ export function ToolcraftRoot({
           </ToolcraftExportProvider>
         </ToolcraftSourceAssetProvider>
     </ToolcraftStoreContext.Provider>
+    </ToolcraftUiSoundProvider>
     </ToolcraftUiLanguageProvider>
   );
   const content = (

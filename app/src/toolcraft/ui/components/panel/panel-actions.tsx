@@ -124,6 +124,7 @@ export function PanelActions({
                   action.className,
                 )}
                 aria-busy={action.busy ? true : undefined}
+                data-cuelume-tap=""
                 data-busy={action.busy ? "true" : undefined}
                 disabled={action.busy}
                 key={actionValue}

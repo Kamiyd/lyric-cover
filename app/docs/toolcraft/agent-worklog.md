@@ -119,3 +119,9 @@ Skip: Measured performance — not run. The protected delivery gate — not run,
 
 - Risk: iTunes and LRCLIB are third-party services; results, availability and rate limits can change. Browser acceptance mocks both.
 - Risk: The bundled Toolcraft copy under `src/toolcraft` has local modifications (listed in the repository README), so the framework's integrity check and delivery gate do not pass.
+
+## Interface sounds (sound branch)
+
+- Decision: interface sounds use `cuelume` (MIT, synthesized with Web Audio, no audio files). Cues are chosen by each control's job in `src/app/sound/weave-cues.ts`: switches → `toggle`; choices → `select` with direction; slider steps → `select`, rate-limited; text edits → `type`; a picked song → one `select`; reset → `close`; a newly woven cover → `ready`; a slow cover → `loading`; a settled export → `success` or `error`. Toolbar buttons and the Export button play `tap` through `data-cuelume-tap`.
+- Preference: a mute button in the bottom toolbar, stored per app outside workspace values, history and reset. Volume is the library's maximum.
+- Evidence: `src/app/sound/*`, `e2e/product-sound.spec.ts`.

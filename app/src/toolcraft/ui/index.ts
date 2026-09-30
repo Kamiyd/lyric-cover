@@ -34,3 +34,4 @@ export {
 
 export { useToolcraftUiLocalization } from "./localization/use-ui-localization";
 export { ToolcraftUiLanguageProvider, useToolcraftUiLanguage } from "./localization/ui-language";
+export { ToolcraftUiSoundProvider, useToolcraftUiSound } from "./localization/ui-sound";

@@ -9,8 +9,9 @@ import {
   TooltipContent,
   TooltipTrigger,
   useToolcraftUiLanguage,
+  useToolcraftUiSound,
 } from "@/toolcraft/ui";
-import { Moon, Redo2, Sun, Undo2, ZoomIn, ZoomOut } from "lucide-react";
+import { Moon, Redo2, Sun, Undo2, Volume2, VolumeX, ZoomIn, ZoomOut } from "lucide-react";
 
 import {
   clampToolcraftCanvasZoom,
@@ -109,6 +110,7 @@ function ToolbarIconButton({
         render={
           <Button
             aria-label={label}
+            data-cuelume-tap=""
             data-ui-language-switch={languageSwitch ? "" : undefined}
             aria-pressed={active}
             className={cn(
@@ -140,6 +142,7 @@ export function ToolbarPanel({
 }: ToolbarPanelProps): React.JSX.Element | null {
   const dispatch = useToolcraftDispatch();
   const { language, setLanguage } = useToolcraftUiLanguage();
+  const { enabled: soundEnabled, setEnabled: setSoundEnabled } = useToolcraftUiSound();
   const panelBinding = useToolcraftPanelBinding({
     onPanelStateChange,
     panelId: "toolbar",
@@ -292,6 +295,14 @@ export function ToolbarPanel({
           onClick={() => setLanguage(language === "en" ? "zh-CN" : "en")}
         >
           <span data-icon="language" className="text-[11px] font-medium leading-none" translate="no">{language === "zh-CN" ? "EN" : "中"}</span>
+        </ToolbarIconButton>
+      ) : null}
+      {toolbar.sound ? (
+        <ToolbarIconButton
+          label={soundEnabled ? "Mute sounds" : "Turn sounds on"}
+          onClick={() => setSoundEnabled(!soundEnabled)}
+        >
+          {soundEnabled ? <Volume2 data-icon="sound-on" /> : <VolumeX data-icon="sound-off" />}
         </ToolbarIconButton>
       ) : null}
       {radarEnabled ? (

@@ -209,13 +209,15 @@ export type ToolcraftCanvasSchema = {
 
 export type ToolcraftToolbarSchema = {
   language?: boolean;
+  /** Shows a mute button; the app plays its own interface sounds and reads the preference. */
+  sound?: boolean;
   history?: boolean;
   radar?: boolean;
   theme?: boolean;
   zoom?: boolean;
 };
 
-export type ResolvedToolcraftToolbarSchema = Required<Omit<ToolcraftToolbarSchema, "language">> & Pick<ToolcraftToolbarSchema, "language">;
+export type ResolvedToolcraftToolbarSchema = Required<Omit<ToolcraftToolbarSchema, "language" | "sound">> & Pick<ToolcraftToolbarSchema, "language" | "sound">;
 
 export type ToolcraftTimelineMode = "keyframes" | "playback";
 
