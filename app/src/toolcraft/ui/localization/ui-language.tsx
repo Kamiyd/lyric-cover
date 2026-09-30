@@ -8,8 +8,21 @@ type LanguagePreference = Readonly<{
 const UiLanguageContext = React.createContext<LanguagePreference>({ language: "en", setLanguage: () => {} });
 
 function readSavedLanguage(key: string): ToolcraftUiLanguage {
-  try { return localStorage.getItem(key) === "zh-CN" ? "zh-CN" : "en"; }
-  catch { return "en"; }
+  try {
+    const saved = localStorage.getItem(key);
+    if (saved === "zh-CN" || saved === "en") return saved;
+  } catch { /* Private mode can still use the browser default for this session. */ }
+
+  if (typeof navigator !== "undefined") {
+    const languages = [navigator.language, ...(navigator.languages ?? [])];
+    for (const language of languages) {
+      const normalized = language.toLowerCase();
+      if (normalized.startsWith("zh")) return "zh-CN";
+      if (normalized.startsWith("en")) return "en";
+    }
+  }
+
+  return "en";
 }
 
 /** A per-app UI preference, separate from artwork, history and settings files. */

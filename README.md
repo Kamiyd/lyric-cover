@@ -16,7 +16,7 @@ I saw people making bouquets out of album covers and realised how much it means 
 2. Tune character density, saturation and font, and decide whether to show the title and artist along the bottom.
 3. Export a PNG or JPG at 2K, 4K or 8K. The file is named `title-artist`.
 
-The song language can be 简体, 繁體 or English; the title, artist and lyrics use that script. The interface itself switches between English and Chinese.
+The song language can be 简体, 繁體 or English; the title, artist and lyrics use that script. The interface itself switches between English and Chinese. On the first visit, it follows your browser language; a manual choice is saved locally and takes precedence on later visits.
 
 ## Run it
 

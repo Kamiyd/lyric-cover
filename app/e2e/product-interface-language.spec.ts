@@ -4,6 +4,27 @@ import { expectToolcraftAcceptanceOutcome } from "./browser-acceptance-outcome-h
 
 const field = (target: string) => `[data-toolcraft-control-target="${target}"]`;
 
+test("browser acceptance: Chinese browser starts with Chinese interface", async ({ page }) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, "language", { configurable: true, value: "zh-CN" });
+    Object.defineProperty(navigator, "languages", { configurable: true, value: ["zh-CN", "en-US"] });
+  });
+  await page.goto("/");
+
+  const language = page.locator("[data-ui-language-switch]");
+  await expect(language).toBeVisible();
+  await expect(language).toHaveText("EN");
+  await expect(page.locator("html")).toHaveAttribute("lang", "zh-CN");
+  await expect(page.getByRole("button", { name: "导出 PNG", exact: true })).toBeVisible();
+  // An explicit choice must win over the browser language on later visits.
+  await language.click();
+  await expect(page.locator("html")).toHaveAttribute("lang", "en");
+  await page.reload();
+  await expect(language).toBeVisible();
+  await expect(page.locator("html")).toHaveAttribute("lang", "en");
+  await expect(page.getByRole("button", { name: "Export PNG", exact: true })).toBeVisible();
+});
+
 test("browser acceptance: interface language switches and survives reload", async ({ page }) => {
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
