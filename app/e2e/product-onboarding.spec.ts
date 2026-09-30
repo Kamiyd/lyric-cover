@@ -16,7 +16,7 @@ test("browser: empty canvas guides search, upload and lyrics without touching th
   const chooser = page.waitForEvent("filechooser");
   await page.getByRole("button", { name: "Upload a cover", exact: true }).click();
   await (await chooser).setFiles({ name: "cover.png", mimeType: "image/png", buffer: quadrantCoverPng(120, 120) });
-  await expect(page.getByRole("heading", { name: "Just add the lyrics" })).toBeVisible();
+  await expect(page.locator(guide).getByText("Add lyrics", { exact: true }).first()).toBeVisible();
   await page.getByRole("button", { name: "Add lyrics", exact: true }).click();
   const lyrics = field(page, "song.lyrics").locator("textarea");
   await expect(lyrics).toBeFocused();
@@ -66,13 +66,13 @@ test("browser: the guide uses the interface language and both themes", async ({ 
     Object.defineProperty(navigator, "language", { value: "zh-CN", configurable: true });
   });
   await page.goto("/");
-  await expect(page.getByRole("heading", { name: "把喜欢的歌，织成一张封面。" })).toBeVisible();
+  await expect(page.locator(guide).getByText("开始制作", { exact: true })).toBeVisible();
   await expect(page.locator('vite-error-overlay')).toHaveCount(0);
   await page.screenshot({ path: "/tmp/lyric-cover-onboarding-dark.png" });
   await page.locator('button:has([data-icon="theme-light"])').click();
   await page.mouse.move(20, 20);
   await expect(page.locator(guide)).toHaveCSS("color", "oklch(0.145 0 0)");
-  await expect.poll(() => page.locator(guide).evaluate(node => getComputedStyle(node, "::before").backgroundColor)).toBe("oklch(1 0 0)");
+  await expect(page.locator(guide)).toHaveCSS("background-color", "oklch(1 0 0)");
   await page.screenshot({ path: "/tmp/lyric-cover-onboarding-light.png" });
   await page.setViewportSize({ width: 1024, height: 768 });
   await expect(page.getByRole("button", { name: "搜索一首歌", exact: true })).toBeVisible();

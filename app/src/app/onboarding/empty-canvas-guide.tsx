@@ -1,12 +1,11 @@
 import * as React from "react";
-import { Search, Upload, ArrowRight } from "lucide-react";
+import { MagnifyingGlassIcon, CloudArrowUpIcon } from "@phosphor-icons/react";
 import { useToolcraftControlNavigation, useToolcraftDispatch, useToolcraftSelector } from "@/toolcraft/runtime/react";
-import { Button, Spinner, useToolcraftUiLanguage } from "@/toolcraft/ui";
+import { Button, Empty, EmptyHeader, EmptyTitle, EmptyDescription, EmptyContent, useToolcraftUiLanguage } from "@/toolcraft/ui";
 import { resolveCoverSource } from "../weave/cover-source";
 import { WEAVE_TARGETS } from "../weave/weave-params";
 import { pickSong, runSongSearch } from "../song/song-actions";
 import { getScriptConverter } from "../song/chinese-script";
-import styles from "./empty-canvas-guide.module.css";
 
 export function EmptyCanvasGuide() {
   const { language } = useToolcraftUiLanguage();
@@ -59,17 +58,21 @@ export function EmptyCanvasGuide() {
   if (cover && lyrics) return null;
   if (!cover && uploading) return null;
   return (
-    <section className={styles.guide} data-empty-canvas-guide="" translate="no" aria-label={zh ? "开始制作封面" : "Create a cover"}>
-      <h1>{cover ? (zh ? "再添几句歌词" : "Just add the lyrics") : lyrics ? (zh ? "还差一张封面" : "Now add a cover") : (zh ? "把喜欢的歌，织成一张封面。" : "Weave a song into its cover.")}</h1>
-      <p>{cover ? (zh ? "粘贴歌词，让文字组成画面。" : "Paste the lyrics and let the words form the image.") : (zh ? "搜索一首歌，或用自己的封面和歌词。" : "Find a song, or bring your own cover and lyrics.")}</p>
-      <div className={styles.actions}>
-        {cover ? <Button variant="secondary" size="sm" onClick={() => go(WEAVE_TARGETS.lyrics)}>{zh ? "粘贴歌词" : "Add lyrics"}<ArrowRight data-icon="lyrics" /></Button> : <>
-          <Button variant="secondary" size="sm" onClick={() => go(WEAVE_TARGETS.pick)}><Search data-icon="search" />{zh ? "搜索一首歌" : "Find a song"}</Button>
-          <Button variant="ghost" size="sm" onClick={() => go(WEAVE_TARGETS.cover, true)}><Upload data-icon="upload" />{zh ? "上传封面" : "Upload a cover"}</Button>
-        </>}
-      </div>
-      {!cover && !lyrics ? <Button className={styles.example} variant="ghost" size="sm" disabled={busy} onClick={() => void loadExample()}>{busy ? <Spinner /> : null}{busy ? (zh ? "正在加载示例…" : "Loading example…") : (zh ? "试试示例 · 旅行的意义" : "Try an example · The Meaning of Travel")}{!busy ? <ArrowRight data-icon="example" /> : null}</Button> : null}
-      {error ? <p className={styles.error} role="status">{zh ? "示例暂时无法加载，请重试或搜索一首歌。" : "The example is unavailable. Try again or search for a song."}</p> : null}
-    </section>
+    <Empty className="pointer-events-auto max-w-sm bg-[color:var(--background)] text-[color:var(--foreground)]" data-empty-canvas-guide="" translate="no" aria-label={zh ? "开始制作封面" : "Create a cover"}>
+      <EmptyHeader>
+        <EmptyTitle>{cover ? (zh ? "添加歌词" : "Add lyrics") : lyrics ? (zh ? "添加封面" : "Add a cover") : (zh ? "开始制作" : "Create a cover")}</EmptyTitle>
+        <EmptyDescription>{cover ? (zh ? "粘贴歌词，生成文字封面。" : "Paste lyrics to create your cover.") : (zh ? "搜索歌曲，或上传自己的封面。" : "Find a song or upload your own cover.")}</EmptyDescription>
+      </EmptyHeader>
+      <EmptyContent>
+        <div className="flex flex-wrap justify-center gap-2">
+          {cover ? <Button variant="secondary" size="sm" onClick={() => go(WEAVE_TARGETS.lyrics)}>{zh ? "粘贴歌词" : "Add lyrics"}</Button> : <>
+            <Button variant="secondary" size="sm" onClick={() => go(WEAVE_TARGETS.pick)}><MagnifyingGlassIcon weight="light" data-icon="inline-start" />{zh ? "搜索一首歌" : "Find a song"}</Button>
+            <Button variant="secondary" size="sm" onClick={() => go(WEAVE_TARGETS.cover, true)}><CloudArrowUpIcon weight="light" data-icon="inline-start" />{zh ? "上传封面" : "Upload a cover"}</Button>
+          </>}
+        </div>
+        {!cover && !lyrics ? <Button variant="ghost-muted" size="sm" loading={busy} onClick={() => void loadExample()}>{zh ? "试试示例 · 旅行的意义" : "Try an example · The Meaning of Travel"}</Button> : null}
+        {error ? <div role="status"><EmptyDescription>{zh ? "示例暂时无法加载，请重试或搜索一首歌。" : "The example is unavailable. Try again or search for a song."}</EmptyDescription></div> : null}
+      </EmptyContent>
+    </Empty>
   );
 }
