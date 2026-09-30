@@ -22,7 +22,7 @@ import {
 } from "./use-canvas-drop-import";
 import { useCanvasViewportInteractions } from "./use-canvas-viewport-interactions";
 import { useToolcraftCanvasFrame } from "./use-toolcraft-canvas-frame";
-import { ToolcraftProductSceneSurface } from "./product-scene-surface";
+import { ToolcraftProductSceneSurface, useToolcraftProductSceneHasBounds } from "./product-scene-surface";
 import { useToolcraftStore } from "../app-shell/toolcraft-store-context";
 import { useToolcraftSourceAssetCoordinator } from "../app-shell/toolcraft-source-asset-context";
 import { useToolcraftCommittedSelector } from "../app-shell/toolcraft-selectors";
@@ -140,6 +140,7 @@ export function CanvasShell({
   );
   const selectedLayerId = useToolcraftCommittedSelector(selectSelectedLayerId);
   const canvasFrame = useToolcraftCanvasFrame();
+  const productHasBounds = useToolcraftProductSceneHasBounds();
   const infiniteCanvasBackgroundColor =
     canvasFrame.kind === "infinite" && background.enabled
       ? background.color
@@ -264,7 +265,7 @@ export function CanvasShell({
       <CanvasViewportWorld>
         {renderEditableCanvas ? (
           <CanvasSceneSurface frame={canvasFrame}>
-            {finiteCanvasBackgroundColor && canvasFrame.kind === "finite" ? (
+            {finiteCanvasBackgroundColor && canvasFrame.kind === "finite" && (productHasBounds || hasCanvasContent && renderDefaultMedia) ? (
               <FiniteCanvasBackgroundLayer
                 color={finiteCanvasBackgroundColor}
                 size={canvasFrame.size}

@@ -46,6 +46,15 @@ export function ToolcraftProductSceneBoundsBoundary({
   );
 }
 
+/** An explicitly empty product has no preview background yet. Keep its renderer mounted. */
+export function useToolcraftProductSceneHasBounds(): boolean {
+  const boundsProvider = React.useContext(ProductSceneBoundsContext);
+  const select = React.useCallback((state: ToolcraftState) =>
+    !boundsProvider || resolveToolcraftProductSceneFrame({ boundsProvider, state }).kind === "ready",
+  [boundsProvider]);
+  return useToolcraftCommittedSelector(select);
+}
+
 export function ToolcraftProductSceneSurface({
   children,
   frame,

@@ -157,3 +157,9 @@ Skip: Measured performance — not run. The protected delivery gate — not run,
 - Active change: transparent-canvas-guide. User asked to remove the extra background around the guide while retaining the reused components.
 - Removed the guide surface fill. Existing Empty and Button components now sit directly over the canvas. Their existing theme tokens follow the canvas background luminance (using the existing background resolver and luminance helper), so light editor chrome does not produce dark text on dark artwork. No new canvas backing or pseudo-element is added.
 - Focused validation: TypeScript and all four onboarding browser tests passed. Reviewed the light-theme screenshot: no card or additional background, readable text over the existing canvas. Search, upload, example, undo and retry remain covered.
+
+### Hide the empty artwork backing
+
+- Active change: empty-artwork-backing. User clarified with a screenshot that the unwanted block is the entire black artwork background, not the guide container.
+- Product bounds are now empty until a cover and lyrics exist. The runtime omits the finite preview fill for an explicitly empty product while retaining the mounted renderer and existing media behavior. The guide inherits editor theme tokens again and sits directly over the workspace pattern.
+- Focused proof: TypeScript and four onboarding browser tests passed. Tests assert no finite background initially or after undo, and its return after valid content. Reviewed the light-theme screenshot confirming uninterrupted workspace dots behind the guide.

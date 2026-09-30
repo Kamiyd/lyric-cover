@@ -9,7 +9,7 @@ import { resolveCoverSource } from "./cover-source";
 import { computeWeaveLayout, weaveLayoutCacheInput } from "./weave-compute";
 import { captionFade, drawCaption, drawFadedGlyphs, drawUnderlay, weaveVisibleHeight } from "./weave-draw";
 import { ensureWeaveFonts, weaveFontFamily } from "./weave-fonts";
-import { readWeaveParams, WEAVE_EXPORT_BASE_NAME, weaveExportBaseName } from "./weave-params";
+import { readWeaveParams, WEAVE_TARGETS, WEAVE_EXPORT_BASE_NAME, weaveExportBaseName } from "./weave-params";
 import { coverSamplePass, exportRenderPass, weaveLayoutPass } from "./weave-pipeline";
 
 /**
@@ -20,9 +20,10 @@ export function getWeaveSceneRect(size: Readonly<{ height: number; width: number
   return { height: size.height, width: size.width, x: -size.width / 2, y: -size.height / 2 };
 }
 
-export const weaveSceneBoundsProvider: ToolcraftProductSceneBoundsProvider = ({ state }) => [
-  getWeaveSceneRect(state.canvas.size),
-];
+export const weaveSceneBoundsProvider: ToolcraftProductSceneBoundsProvider = ({ state }) =>
+  resolveCoverSource(state.mediaAssets, state.values) && String(state.values[WEAVE_TARGETS.lyrics] ?? "").trim()
+    ? [getWeaveSceneRect(state.canvas.size)]
+    : [];
 
 const EXPORT_GLYPH_BATCH = 128;
 const EXPORT_SLICE_MS = 32;

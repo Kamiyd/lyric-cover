@@ -3,8 +3,7 @@ import { MagnifyingGlassIcon, CloudArrowUpIcon } from "@phosphor-icons/react";
 import { useToolcraftControlNavigation, useToolcraftDispatch, useToolcraftSelector } from "@/toolcraft/runtime/react";
 import { Button, Empty, EmptyHeader, EmptyTitle, EmptyDescription, EmptyContent, useToolcraftUiLanguage } from "@/toolcraft/ui";
 import { resolveCoverSource } from "../weave/cover-source";
-import { getToolcraftCanvasBackgroundState } from "@/toolcraft/runtime";
-import { hexLuminance, WEAVE_TARGETS } from "../weave/weave-params";
+import { WEAVE_TARGETS } from "../weave/weave-params";
 import { pickSong, runSongSearch } from "../song/song-actions";
 import { getScriptConverter } from "../song/chinese-script";
 
@@ -14,10 +13,6 @@ export function EmptyCanvasGuide() {
   const dispatch = useToolcraftDispatch();
   const navigate = useToolcraftControlNavigation();
   const values = useToolcraftSelector(state => state.values);
-  const background = useToolcraftSelector(getToolcraftCanvasBackgroundState);
-  const guideTheme = background.enabled && background.color
-    ? (hexLuminance(background.color) > 0.4 ? "light" : "dark")
-    : undefined;
   const media = useToolcraftSelector(state => state.mediaAssets);
   const cover = resolveCoverSource(media, values);
   const lyrics = String(values[WEAVE_TARGETS.lyrics] ?? "").trim();
@@ -63,7 +58,7 @@ export function EmptyCanvasGuide() {
   if (cover && lyrics) return null;
   if (!cover && uploading) return null;
   return (
-    <Empty className="pointer-events-auto max-w-sm text-[color:var(--foreground)]" data-toolcraft-theme={guideTheme} data-empty-canvas-guide="" translate="no" aria-label={zh ? "开始制作封面" : "Create a cover"}>
+    <Empty className="pointer-events-auto max-w-sm text-[color:var(--foreground)]" data-empty-canvas-guide="" translate="no" aria-label={zh ? "开始制作封面" : "Create a cover"}>
       <EmptyHeader>
         <EmptyTitle>{cover ? (zh ? "添加歌词" : "Add lyrics") : lyrics ? (zh ? "添加封面" : "Add a cover") : (zh ? "开始制作" : "Create a cover")}</EmptyTitle>
         <EmptyDescription>{cover ? (zh ? "粘贴歌词，生成文字封面。" : "Paste lyrics to create your cover.") : (zh ? "搜索歌曲，或上传自己的封面。" : "Find a song or upload your own cover.")}</EmptyDescription>
