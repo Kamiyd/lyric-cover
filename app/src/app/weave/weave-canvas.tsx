@@ -1,5 +1,6 @@
 import * as React from "react";
 import {
+  getFreeAreaCenterOffsetX,
   useToolcraftDispatch,
   useToolcraftMediaPresentationUrls,
   useToolcraftPipeline,
@@ -62,7 +63,7 @@ export function WeaveCanvas(): React.JSX.Element {
     dispatch({
       type: "canvas.setViewport",
       zoom: 55,
-      offset: { x: viewport.offset.x * 0.55, y: viewport.offset.y * 0.55 },
+      offset: { x: getFreeAreaCenterOffsetX(), y: 0 },
     });
   }, [dispatch, glyphCount, viewport]);
 

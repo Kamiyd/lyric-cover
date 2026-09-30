@@ -175,3 +175,9 @@ Skip: Measured performance — not run. The protected delivery gate — not run,
 - Active change: initial-artwork-zoom. User requested 55% after loading the example or generating the first cover, since 100% looks too large.
 - The example sets the viewport to 55%; first rendered output changes an untouched 100% viewport to 55% once. Existing artwork and subsequent edits preserve the chosen view. Source dimensions and exports are unchanged.
 - Focused validation: TypeScript and all four onboarding browser tests passed. Assertions cover 55% for upload and example, then manual zoom to 65% retained after lyric edits and reload.
+
+### Center initial output beside controls
+
+- Active change: initial-free-area-center. User clarified that initial artwork must center in the left available workspace, excluding the controls panel.
+- Extracted the existing toolbar free-area calculation into a shared runtime helper. First-generation 55% zoom and example loading now use that same center, instead of scaling the previous offset or resetting it to the full-page origin.
+- Focused validation: TypeScript and four onboarding browser tests passed. Added geometric assertions comparing artwork center to the midpoint between viewport left and controls-panel left for both uploaded and example artwork. Manual zoom persistence remains covered.

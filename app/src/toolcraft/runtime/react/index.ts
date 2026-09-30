@@ -62,3 +62,5 @@ export {
 export * from "./app-shell/toolcraft-defaults-authoring";
 
 export { useToolcraftControlNavigation } from "./app-shell/use-control-navigation";
+
+export { getFreeAreaCenterOffsetX } from "./app-shell/free-area-center";
