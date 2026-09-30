@@ -196,3 +196,11 @@ Skip: Measured performance — not run. The protected delivery gate — not run,
 - Verification tier: Tier 3, focused renderer colour behavior. Run: weave layout unit tests and weave.brightness feature browser acceptance (live drag, brightness direction, reset). Skip: aggregate delivery, full browser/export matrix and measured performance because this is a localized later edit.
 - No additional workflow skill is needed for this small edit; the signed local workflow supplies the contract.
 - Verification: all 20 weave unit tests passed; the single focused Playwright brightness test passed, proving control order, live brightening before pointer release, dimming, and section reset to 100%. `git diff --check` passed. The protected `test:feature -- weave.brightness` preflight is unavailable because the existing playwright.config.ts does not match its signed config digest; no protected config or manifest was modified. The direct browser run is focused diagnostic/functional proof, not a protected feature receipt. Measured performance was not run.
+
+
+### Search field subtitle
+
+- Active change: search-field-subtitle. Change ID: search-field-subtitle. Request: add a subtitle to the song search field. Later localized presentation edit.
+- Reused public FieldLabel above the existing song input, with htmlFor linked to its id and the existing Search/搜索 localization. Public component owns label typography; no new styles or state.
+- Verification tier: Tier 1. Focused check: existing onboarding browser test for search focus/upload/lyrics, with label visibility, placement and click focus assertions. Skip aggregate delivery and performance because only a field label changed.
+- Verification: focused onboarding browser test passed, covering subtitle placement, label click focus, guide navigation, upload, lyrics and restored artwork. `git diff --check` passed. An initial ControlFieldLabel candidate introduced a help button before the input, which intercepted the existing first-focusable navigation; using FieldLabel preserves the intended input focus without changing runtime code.

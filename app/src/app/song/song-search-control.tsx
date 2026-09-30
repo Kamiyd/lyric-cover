@@ -1,7 +1,7 @@
 import * as React from "react";
 import { MagnifyingGlassIcon } from "@phosphor-icons/react";
 import type { ToolcraftCustomControlRendererProps } from "@/toolcraft/runtime/react";
-import { InputGroup, InputGroupAddon, InputGroupInput, Spinner, useToolcraftUiLanguage } from "@/toolcraft/ui";
+import { FieldLabel, InputGroup, InputGroupAddon, InputGroupInput, Spinner, useToolcraftUiLanguage } from "@/toolcraft/ui";
 
 import { translateUiText, translateSongStatus } from "../i18n/messages";
 import { playWeaveCue } from "../sound/weave-sound-player";
@@ -146,6 +146,9 @@ export function SongSearchControl({
 
   return (
     <div className={styles.root} data-song-search="" translate="no">
+      <FieldLabel htmlFor={controlId}>
+        {translateUiText("Search", uiLanguage)}
+      </FieldLabel>
       <InputGroup>
         <InputGroupAddon align="inline-start">
           <MagnifyingGlassIcon />

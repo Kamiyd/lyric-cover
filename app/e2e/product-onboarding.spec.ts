@@ -22,7 +22,15 @@ test("browser: empty canvas guides search, upload and lyrics without touching th
   await expect(page.locator(guide)).toBeVisible();
   await expect(page.locator("[data-toolcraft-finite-background-layer]")).toHaveCount(0);
   await expect(page).toHaveTitle("Lyric Cover");
+  const searchLabel = page.locator('[data-song-search] label');
+  await expect(searchLabel).toHaveText("Search");
+  await expect(searchLabel).toBeVisible();
+  const labelBox = await searchLabel.boundingBox();
+  const inputBox = await page.locator('[data-song-search] input').boundingBox();
+  expect(labelBox!.y + labelBox!.height).toBeLessThanOrEqual(inputBox!.y);
   await page.getByRole("button", { name: "Find a song", exact: true }).click();
+  await expect(page.locator('[data-song-search] input')).toBeFocused();
+  await searchLabel.click();
   await expect(page.locator('[data-song-search] input')).toBeFocused();
   const chooser = page.waitForEvent("filechooser");
   await page.getByRole("button", { name: "Upload a cover", exact: true }).click();
