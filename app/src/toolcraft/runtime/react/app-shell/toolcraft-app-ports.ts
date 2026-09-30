@@ -33,6 +33,8 @@ function forEachToolcraftSetLikeValue<T>(
 
 export type ToolcraftAppScenePorts = Readonly<{
   canvasContent?: React.ReactNode;
+  /** Editor-only content, outside the artwork and export surface. */
+  workspaceOverlay?: React.ReactNode;
   infiniteCanvasContent?: React.ReactNode;
   rasterFrameRenderer?: ToolcraftProductExportRenderer;
   renderDefaultCanvasMedia?: boolean;
@@ -170,6 +172,7 @@ export function createToolcraftAppPortsSnapshot(
       ? {}
       : {
           scene: Object.freeze({
+            ...(scene.workspaceOverlay === undefined ? {} : { workspaceOverlay: snapshotReactNode(scene.workspaceOverlay) }),
             ...(scene.canvasContent === undefined
               ? {}
               : { canvasContent: snapshotReactNode(scene.canvasContent) }),

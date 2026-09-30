@@ -12,7 +12,7 @@ I saw people making bouquets out of album covers and realised how much it means 
 
 ## How to use it
 
-1. Pick the song language, then search for a song, or upload a cover and paste the lyrics yourself.
+1. Start from the empty canvas: find a song, or upload a cover and paste lyrics. You can also try the “The Meaning of Travel” example. Change the song language in the side panel.
 2. Tune character density, saturation and font, and decide whether to show the title and artist along the bottom.
 3. Export a PNG or JPG at 2K, 4K or 8K. The file is named `title-artist`.
 
@@ -66,6 +66,7 @@ pnpm build                                 # production build
 That copy has local modifications:
 
 - an interface-language switch in the toolbar, with a small localization layer;
+- an editor-only empty-canvas guide with control navigation, excluded from exported artwork;
 - an option to turn off Infinity canvas;
 - the canvas and the toolbar centre in the area beside the controls panel, and toolbar zoom keeps that centre;
 - the Export button shows a busy state while an export runs, and the footer progress line is thicker;

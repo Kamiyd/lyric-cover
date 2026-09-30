@@ -9,6 +9,7 @@ export function AppHome(): React.JSX.Element {
     <ToolcraftDefaultsAuthoringProvider value={authoring}>
       <ToolcraftApp
         canvasContent={appComposition.canvasContent}
+        workspaceOverlay={appComposition.workspaceOverlay}
         className="h-dvh min-h-dvh"
         controlRenderers={appComposition.controlRenderers}
         exportRenderer={appComposition.exportRenderer}
