@@ -71,8 +71,8 @@ test("browser: the guide uses the interface language and both themes", async ({ 
   await page.screenshot({ path: "/tmp/lyric-cover-onboarding-dark.png" });
   await page.locator('button:has([data-icon="theme-light"])').click();
   await page.mouse.move(20, 20);
-  await expect(page.locator(guide)).toHaveCSS("color", "oklch(0.145 0 0)");
-  await expect(page.locator(guide)).toHaveCSS("background-color", "oklch(1 0 0)");
+  await expect(page.locator(guide)).toHaveCSS("color", "oklch(0.985 0 0)");
+  await expect(page.locator(guide)).toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
   await page.screenshot({ path: "/tmp/lyric-cover-onboarding-light.png" });
   await page.setViewportSize({ width: 1024, height: 768 });
   await expect(page.getByRole("button", { name: "搜索一首歌", exact: true })).toBeVisible();
