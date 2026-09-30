@@ -30,6 +30,7 @@ export function EmptyCanvasGuide() {
     navigate(target, file);
   };
   const loadExample = async () => {
+    dispatch({ type: "canvas.setViewport", zoom: 55, offset: { x: 0, y: 0 } });
     request.current?.abort();
     const controller = new AbortController();
     request.current = controller;
