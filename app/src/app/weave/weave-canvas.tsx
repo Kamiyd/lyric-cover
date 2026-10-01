@@ -11,7 +11,6 @@ import {
 } from "@/toolcraft/runtime/react";
 
 import { useInterfaceLanguage } from "../i18n/use-interface-language";
-import { useWeaveSounds } from "../sound/use-weave-sounds";
 import { decodeCoverBitmap, sampleCover } from "./cover-sample";
 import { getUploadedCovers, resolveCoverSource } from "./cover-source";
 import { computeWeaveLayout, weaveLayoutCacheInput } from "./weave-compute";
@@ -197,7 +196,6 @@ export function WeaveCanvas(): React.JSX.Element {
   // The finished raster still has to be composed with the caption before the weave is ready.
   const inProgress = busy || (raster !== null && composed !== raster);
   const weaveState = inProgress ? (painted ? "weaving" : "loading") : glyphCount > 0 ? "ready" : "empty";
-  useWeaveSounds(sourceKey, weaveState);
   const loading = weaveState === "loading";
   React.useEffect(() => {
     if (!loading || !canvasRef.current) return;

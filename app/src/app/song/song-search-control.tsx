@@ -4,7 +4,6 @@ import type { ToolcraftCustomControlRendererProps } from "@/toolcraft/runtime/re
 import { FieldLabel, InputGroup, InputGroupAddon, InputGroupInput, Spinner, useToolcraftUiLanguage } from "@/toolcraft/ui";
 
 import { translateUiText, translateSongStatus } from "../i18n/messages";
-import { playWeaveCue } from "../sound/weave-sound-player";
 import { getUploadedCovers } from "../weave/cover-source";
 import { WEAVE_TARGETS } from "../weave/weave-params";
 import { getScriptConverter, type ScriptConverter } from "./chinese-script";
@@ -78,7 +77,6 @@ export function SongSearchControl({
           setListing(response.listing);
           setActive(0);
           setStatus(response.status);
-          if (response.status.kind === "error") playWeaveCue({ name: "error" });
         },
         () => undefined,
       );
@@ -106,8 +104,6 @@ export function SongSearchControl({
       pickSong({ dispatch, language, result, signal: controller.signal, store: listing.store, uploadIds }).then(
         (next) => {
           if (next) setStatus(next);
-          // The song was applied but its lyrics could not be fetched: done, but needs a look.
-          if (next?.kind === "error") playWeaveCue({ name: "warning" });
         },
         () => undefined,
       );
@@ -125,11 +121,9 @@ export function SongSearchControl({
     if (event.key === "ArrowDown" && count > 0) {
       event.preventDefault();
       setActive((index) => Math.min(count - 1, index + 1));
-      playWeaveCue({ name: "select", options: { direction: "forward" } });
     } else if (event.key === "ArrowUp" && count > 0) {
       event.preventDefault();
       setActive((index) => Math.max(0, index - 1));
-      playWeaveCue({ name: "select", options: { direction: "back" } });
     } else if (event.key === "Enter") {
       event.preventDefault();
       const trimmed = term.trim();
@@ -156,7 +150,6 @@ export function SongSearchControl({
         <InputGroupInput
           aria-controls={`${controlId}-results`}
           aria-label={translateUiText("Search a song", uiLanguage)}
-          data-cuelume-type=""
           id={controlId}
           onChange={(event) => setTerm(event.currentTarget.value)}
           onKeyDown={onKeyDown}

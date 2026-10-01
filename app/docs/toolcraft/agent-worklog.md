@@ -220,3 +220,12 @@ Skip: Measured performance — not run. The protected delivery gate — not run,
 - English UI loads Taylor Swift / Cruel Summer through the existing iTunes/LRCLIB pipeline with English song language; Chinese UI retains 陈绮贞 / 旅行的意义. The button, search query, result matching and picked language share the same UI-language decision. No bundled lyrics or cover art.
 - Focused checks: English and Chinese example browser flows, plus failed-example retry. Existing zoom/centering and Undo assertions remain in the English flow. No aggregate delivery or measured performance.
 - Verification: all three focused browser tests passed: English Cruel Summer with artist/language/lyrics and Undo, retained Chinese example, and unavailable-example retry. `git diff --check` passed. Remote services use deterministic test fixtures; no measured performance was run.
+
+
+### Restore silent main variant
+
+- Active change: restore-silent-main. Change ID: restore-silent-main. User explicitly requested correction after main incorrectly included the sound variant.
+- Main disables the sound toolbar and removes product imports/calls that initialize cuelume or play search/control/generated/export cues. Common brightness, search subtitle, caption and English example changes stay intact. Sound retains its existing integration. Framework copies are unchanged.
+- Push rules now preserve branch variants and cherry-pick common changes rather than requiring identical heads.
+- Focused verification: main silent browser scenario with real generated artwork, switches, font, typing, toolbar and reload; sound's existing audible/mute scenario; production build on main to verify deployability. No measured performance.
+- Verification: main silent browser test passed (zero started audio sources before/after interactions and reload, no mute button); sound audible/mute/reload browser test passed; main production build and TypeScript passed. Main keeps the common product changes. Measured performance was not run.

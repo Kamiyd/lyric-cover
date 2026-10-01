@@ -88,24 +88,6 @@ export const appProductReadiness: ToolcraftProductReadiness = {
 export const appAcceptance: readonly ToolcraftComponentAcceptance[] = [
   {
     automated: true,
-    automatedTestName: "interface sounds follow the job each control does",
-    browser: {
-      budget: "standard",
-      file: "e2e/product-sound.spec.ts",
-      testName: "browser acceptance: interface sounds play and the mute button silences them",
-    },
-    componentType: "toolbar",
-    evidence: "command-side-effect",
-    expectedObservable:
-      "Controls play a short synthesized cue; the toolbar mute button silences every cue, keeps its state across reload, and confirms with a cue when turned back on.",
-    fixture: "uploaded cover with lyrics",
-    id: "interface.sound",
-    kind: "runtime",
-    target: "interface.sound",
-    userAction: "Toggle a switch, mute, toggle again, reload, then turn sound back on.",
-  },
-  {
-    automated: true,
     automatedTestName: "interface language preserves canonical values and translates display copy",
     browser: { budget: "standard", file: "e2e/product-interface-language.spec.ts", testName: "browser acceptance: interface language switches and survives reload" },
     componentType: "toolbar", evidence: "command-side-effect",

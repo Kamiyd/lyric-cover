@@ -30,7 +30,7 @@ export const appSchema = defineToolcraft({
     },
     toolbar: {
       language: true,
-      sound: true,
+      sound: false,
       history: true,
       radar: true,
       theme: true,

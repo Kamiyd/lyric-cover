@@ -1,6 +1,5 @@
 import type { Page } from "@playwright/test";
 
-import { expectToolcraftAcceptanceOutcome } from "./browser-acceptance-outcome-helpers";
 import { field, openWovenCover } from "./lyric-weave-support";
 import { expect, test } from "./toolcraft-product-test";
 
@@ -22,44 +21,20 @@ async function countSoundSources(page: Page): Promise<void> {
 const soundsStarted = (page: Page) =>
   page.evaluate(() => (window as unknown as { __sounds: { started: number } }).__sounds.started);
 
-test("browser acceptance: interface sounds play and the mute button silences them", async ({ page }) => {
+test("browser: main remains silent during controls, typing, generation and reload", async ({ page }) => {
   await countSoundSources(page);
-  const session = await openWovenCover(page);
+  await openWovenCover(page);
   const mute = page.getByRole("button", { name: /^(Mute sounds|Turn sounds on)$/u });
-  await expect(mute).toHaveAccessibleName("Mute sounds");
-
-  // A switch plays its cue.
-  const toneSizing = field(page, "weave.toneSize").getByRole("switch");
-  const beforeToggle = await soundsStarted(page);
-  await toneSizing.click();
-  await expect.poll(() => soundsStarted(page)).toBeGreaterThan(beforeToggle);
-
-  // Muting silences control cues and toolbar taps alike.
-  await expectToolcraftAcceptanceOutcome(
-    () => mute.getAttribute("aria-label"),
-    session.targetAction("interface.sound", async () => {
-      await mute.click();
-      await expect(mute).toHaveAccessibleName("Turn sounds on");
-    }),
-    { evidenceType: "command-side-effect", requirementId: "interface.sound" },
-  );
-  await page.waitForTimeout(300); // let the click's own tap finish starting
-  const whileMuted = await soundsStarted(page);
-  await toneSizing.click();
+  await expect(mute).toHaveCount(0);
+  await field(page, "weave.toneSize").getByRole("switch").click();
   await field(page, "weave.font").getByRole("button", { exact: true, name: "Serif" }).click();
+  await field(page, "song.lyrics").locator("textarea").pressSequentially(" test");
   await page.getByRole("button", { name: "Zoom out" }).click();
-  await page.waitForTimeout(400);
-  expect(await soundsStarted(page)).toBe(whileMuted);
-
-  // The preference is the app's own and survives a reload.
+  await page.waitForTimeout(700);
+  expect(await soundsStarted(page)).toBe(0);
   await page.reload();
-  await expect(mute).toHaveAccessibleName("Turn sounds on");
+  await expect(mute).toHaveCount(0);
   await field(page, "weave.toneSize").getByRole("switch").click();
   await page.waitForTimeout(400);
   expect(await soundsStarted(page)).toBe(0);
-
-  // Turning sound back on confirms itself with a cue.
-  await mute.click();
-  await expect(mute).toHaveAccessibleName("Mute sounds");
-  await expect.poll(() => soundsStarted(page)).toBeGreaterThan(0);
 });

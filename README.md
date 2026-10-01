@@ -81,13 +81,9 @@ Because of these changes, Toolcraft's original signed integrity check reports di
 
 The upstream checker and signed manifests are unchanged. For everyday development, use `pnpm test`, `pnpm test:browser`, and `pnpm build` above.
 
-## Interface sounds (this branch)
+## Branch variants
 
-This branch adds short synthesized interface sounds with [cuelume](https://github.com/danielwh2/cuelume) (MIT): a snap for switches, a detent for choices and slider steps, keystrokes for typing, and cues when a cover finishes, when an export settles, and when something fails. The speaker button in the bottom toolbar mutes them; the setting is remembered.
-
-It depends on `cuelume@0.2.4`. If your npm mirror does not have that version yet, install from the official registry: `pnpm install --registry https://registry.npmjs.org/`.
-
-Additional changes to the Toolcraft copy on this branch: a sound preference and mute button in the toolbar, `data-cuelume-tap` on toolbar and export buttons, and a public hook for the export status.
+`main` is the silent production version. `sound` includes interface sounds and its mute button. Common feature changes are applied to both branches without merging sound-only behavior into main.
 
 ## License
 
