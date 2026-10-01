@@ -150,7 +150,7 @@ describe("weave drawing", () => {
     const log: Recorded[] = [];
     const caption = readWeaveParams({ "caption.title": "旅行的意义" }).caption;
     drawCaption(recordingContext(log), 1000, 1000, caption, weaveFontFamily("sans"));
-    expect(log.find((entry) => entry.call === "fillText")?.args[0]).toBe("《旅行的意义》");
+    expect(log.find((entry) => entry.call === "fillText")?.args[0]).toBe("旅行的意义");
   });
 
   it("caption artist is drawn in the strip", () => {

@@ -204,3 +204,19 @@ Skip: Measured performance — not run. The protected delivery gate — not run,
 - Reused public FieldLabel above the existing song input, with htmlFor linked to its id and the existing Search/搜索 localization. Public component owns label typography; no new styles or state.
 - Verification tier: Tier 1. Focused check: existing onboarding browser test for search focus/upload/lyrics, with label visibility, placement and click focus assertions. Skip aggregate delivery and performance because only a field label changed.
 - Verification: focused onboarding browser test passed, covering subtitle placement, label click focus, guide navigation, upload, lyrics and restored artwork. `git diff --check` passed. An initial ControlFieldLabel candidate introduced a help button before the input, which intercepted the existing first-focusable navigation; using FieldLabel preserves the intended input focus without changing runtime code.
+
+
+### Caption without title brackets
+
+- Active change: caption-without-brackets. Change ID: caption-without-brackets. Later localized edit: remove the title brackets from the caption.
+- Shared drawCaption renders caption.title verbatim, without automatically inserting 《》. Preview and export font preparation use only actual caption text.
+- Focused checks: weave drawing and export renderer unit tests, plus existing example onboarding browser check. No aggregate delivery or measured performance is needed for this typography edit.
+- Verification: 21 drawing/export unit tests and the focused example onboarding browser test passed. `git diff --check` passed. Preview and export assertions now expect the title without inserted brackets.
+
+
+### English onboarding example
+
+- Active change: english-cruel-summer-example. Change ID: english-cruel-summer-example. Request: use Cruel Summer as the example in the English interface. Later localized example action change.
+- English UI loads Taylor Swift / Cruel Summer through the existing iTunes/LRCLIB pipeline with English song language; Chinese UI retains 陈绮贞 / 旅行的意义. The button, search query, result matching and picked language share the same UI-language decision. No bundled lyrics or cover art.
+- Focused checks: English and Chinese example browser flows, plus failed-example retry. Existing zoom/centering and Undo assertions remain in the English flow. No aggregate delivery or measured performance.
+- Verification: all three focused browser tests passed: English Cruel Summer with artist/language/lyrics and Undo, retained Chinese example, and unavailable-example retry. `git diff --check` passed. Remote services use deterministic test fixtures; no measured performance was run.

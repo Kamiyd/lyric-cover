@@ -92,8 +92,10 @@ const TRACKS = {
   ],
 } as const;
 
-function itunesPayload(store: string | null) {
-  const names = store === "us" || store === "sg" ? TRACKS.en : TRACKS.zh;
+function itunesPayload(store: string | null, term: string | null) {
+  const names = term?.includes("Cruel Summer")
+    ? [{ artist: "Taylor Swift", title: "Cruel Summer" }]
+    : store === "us" || store === "sg" ? TRACKS.en : TRACKS.zh;
   return {
     results: names.map((track, index) => ({
       artistName: track.artist,
@@ -114,7 +116,7 @@ export async function mockRemoteServices(page: Page): Promise<void> {
   await page.route("https://itunes.apple.com/**", (route) =>
     route.fulfill({
       headers: CORS,
-      json: itunesPayload(new URL(route.request().url()).searchParams.get("country")),
+      json: itunesPayload(new URL(route.request().url()).searchParams.get("country"), new URL(route.request().url()).searchParams.get("term")),
     }),
   );
   await page.route("https://is1-ssl.mzstatic.com/**", (route) =>

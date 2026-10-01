@@ -37,18 +37,21 @@ export function EmptyCanvasGuide() {
     setBusy(true);
     setError(false);
     try {
+      const exampleLanguage = zh ? "cn" : "en";
+      const exampleTitle = zh ? "旅行的意义" : "Cruel Summer";
+      const exampleArtist = zh ? "陈绮贞" : "Taylor Swift";
       const [response, convert] = await Promise.all([
-        runSongSearch("旅行的意义 陈绮贞", "cn", controller.signal),
-        getScriptConverter("cn"),
+        runSongSearch(`${exampleTitle} ${exampleArtist}`, exampleLanguage, controller.signal),
+        getScriptConverter(exampleLanguage),
       ]);
-      const result = response.listing?.results.find(song => convert(song.title).includes("旅行的意义") && convert(song.artist).includes("陈绮贞"));
+      const result = response.listing?.results.find(song => convert(song.title).includes(exampleTitle) && convert(song.artist).includes(exampleArtist));
       if (!result || !response.listing) throw new Error("Example unavailable");
       if (controller.signal.aborted) return;
       await pickSong({
         dispatch: command => dispatch(command.type === "controls.apply"
-          ? { ...command, values: { ...command.values, [WEAVE_TARGETS.language]: "cn" } }
+          ? { ...command, values: { ...command.values, [WEAVE_TARGETS.language]: exampleLanguage } }
           : command),
-        language: "cn", result, signal: controller.signal, store: response.listing.store, uploadIds: [],
+        language: exampleLanguage, result, signal: controller.signal, store: response.listing.store, uploadIds: [],
       });
     } catch {
       if (!controller.signal.aborted) setError(true);
@@ -71,7 +74,7 @@ export function EmptyCanvasGuide() {
             <Button variant="secondary" size="sm" onClick={() => go(WEAVE_TARGETS.cover, true)}><CloudArrowUpIcon weight="light" data-icon="inline-start" />{zh ? "上传封面" : "Upload a cover"}</Button>
           </>}
         </div>
-        {!cover && !lyrics ? <Button variant="ghost-muted" size="sm" loading={busy} onClick={() => void loadExample()}>{zh ? "试试示例 · 旅行的意义" : "Try an example · The Meaning of Travel"}</Button> : null}
+        {!cover && !lyrics ? <Button variant="ghost-muted" size="sm" loading={busy} onClick={() => void loadExample()}>{zh ? "试试示例 · 旅行的意义" : "Try an example · Cruel Summer"}</Button> : null}
         {error ? <div role="status"><EmptyDescription>{zh ? "示例暂时无法加载，请重试或搜索一首歌。" : "The example is unavailable. Try again or search for a song."}</EmptyDescription></div> : null}
       </EmptyContent>
     </Empty>

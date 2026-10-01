@@ -166,7 +166,7 @@ export function WeaveCanvas(): React.JSX.Element {
     if (!canvas || !pipeline || busy) return;
     let active = true;
     const run = async () => {
-      await ensureWeaveFonts(params.glyphs.font, "", `《》${caption.title}${caption.artist}`);
+      await ensureWeaveFonts(params.glyphs.font, "", `${caption.title}${caption.artist}`);
       if (!active) return 0;
       return composeWeave({
         canvas,

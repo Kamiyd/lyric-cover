@@ -166,7 +166,7 @@ export function drawCaption(
   if (caption.title) {
     context.textAlign = "left";
     context.font = `900 ${band * 0.36}px ${titleFamily}`;
-    context.fillText(`《${caption.title}》`, padding * 0.6, centreY, width * 0.68);
+    context.fillText(caption.title, padding * 0.6, centreY, width * 0.68);
   }
   if (caption.artist) {
     context.textAlign = "right";

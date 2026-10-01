@@ -93,6 +93,6 @@ describe("weave export", () => {
     expect(passes).toEqual(["cover-sample", "weave-layout", "export-render"]);
     expect(translations[0]).toEqual([-50, -50]);
     expect(drawn.length).toBeGreaterThan(100);
-    expect(drawn).toContain("《旅行的意义》");
+    expect(drawn).toContain("旅行的意义");
   });
 });

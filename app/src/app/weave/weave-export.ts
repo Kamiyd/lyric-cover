@@ -79,7 +79,7 @@ export const weaveExportRenderer: ToolcraftProductExportRenderer = {
     await ensureWeaveFonts(
       params.glyphs.font,
       "",
-      `《》${params.caption.title}${params.caption.artist}`,
+      `${params.caption.title}${params.caption.artist}`,
     );
     signal.throwIfAborted();
     await rendererPipeline.runPass(exportRenderPass, undefined, async () => {

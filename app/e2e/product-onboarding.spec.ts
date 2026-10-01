@@ -58,18 +58,20 @@ test("browser: empty canvas guides search, upload and lyrics without touching th
   expect(errors).toEqual([]);
 });
 
-test("browser: the example loads The Meaning of Travel and undo restores the guide", async ({ page }) => {
+test("browser: the English example loads Cruel Summer and undo restores the guide", async ({ page }) => {
   await mockRemoteServices(page);
+  await page.route("https://lrclib.net/api/**", route => route.fulfill({ json: { duration: 221, plainLyrics: "English example text for testing" }, headers: { "access-control-allow-origin": "*" } }));
   await page.goto("/");
   await field(page, "song.language").getByRole("button", { name: "English", exact: true }).click();
-  await page.getByRole("button", { name: "Try an example · The Meaning of Travel", exact: true }).click();
+  await page.getByRole("button", { name: "Try an example · Cruel Summer", exact: true }).click();
   await waitForWeave(page);
   await expect(page.getByText("55%", { exact: true })).toBeVisible();
   await expectCenteredInWorkspace(page);
   await expect(page.locator("[data-toolcraft-finite-background-layer]")).toBeVisible();
-  await expect(field(page, "caption.title").locator("input")).toHaveValue("旅行的意义");
-  await expect(field(page, "song.language").getByRole("button", { name: "简体", exact: true })).toHaveAttribute("aria-pressed", "true");
-  await expect(field(page, "song.lyrics").locator("textarea")).toHaveValue(/举头望明月/u);
+  await expect(field(page, "caption.title").locator("input")).toHaveValue("Cruel Summer");
+  await expect(field(page, "caption.artist").locator("input")).toHaveValue("Taylor Swift");
+  await expect(field(page, "song.language").getByRole("button", { name: "English", exact: true })).toHaveAttribute("aria-pressed", "true");
+  await expect(field(page, "song.lyrics").locator("textarea")).toHaveValue("English example text for testing");
   await expect(page.locator(guide)).toHaveCount(0);
   await page.getByRole("button", { name: "Undo", exact: true }).click();
   await expect(page.locator(guide)).toBeVisible();
@@ -77,12 +79,23 @@ test("browser: the example loads The Meaning of Travel and undo restores the gui
   await expect(field(page, "song.language").getByRole("button", { name: "English", exact: true })).toHaveAttribute("aria-pressed", "true");
 });
 
+test("browser: the Chinese example retains The Meaning of Travel", async ({ page }) => {
+  await mockRemoteServices(page);
+  await page.addInitScript(() => Object.defineProperty(navigator, "language", { value: "zh-CN", configurable: true }));
+  await page.goto("/");
+  await page.getByRole("button", { name: "试试示例 · 旅行的意义", exact: true }).click();
+  await waitForWeave(page);
+  await expect(field(page, "caption.title").locator("input")).toHaveValue("旅行的意义");
+  await expect(field(page, "caption.artist").locator("input")).toHaveValue("陈绮贞");
+  await expect(field(page, "song.lyrics").locator("textarea")).toHaveValue(/举头望明月/u);
+});
+
 test("browser: an unavailable example keeps the guide usable and supports retry", async ({ page }) => {
   await mockRemoteServices(page);
   let fail = true;
   await page.route("https://itunes.apple.com/**", route => fail ? route.fulfill({ json: { results: [] }, headers: { "access-control-allow-origin": "*" } }) : route.fallback());
   await page.goto("/");
-  const example = page.getByRole("button", { name: "Try an example · The Meaning of Travel", exact: true });
+  const example = page.getByRole("button", { name: "Try an example · Cruel Summer", exact: true });
   await example.click();
   await expect(page.locator(guide).getByRole("status")).toContainText("unavailable");
   await expect(example).toBeEnabled();
