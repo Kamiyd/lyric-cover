@@ -35,6 +35,14 @@ export const EMPTY_WEAVE_LAYOUT: WeaveLayout = Object.freeze({
 export type MeasureGlyph = (glyph: string) => number;
 
 /**
+ * Tone-sized glyphs snap to 1/32 of the font size. A continuous size per glyph gave every glyph
+ * a font size of its own, so the browser re-rasterised each one from its outline (about 0.4 ms
+ * a glyph); a few dozen sizes let its glyph cache serve almost every draw. The snap moves a
+ * glyph edge by at most 0.2 frame units.
+ */
+export const TONE_SIZE_STEPS = 32;
+
+/**
  * Lays the lyric characters row by row across the cover. Each glyph samples the average cover
  * colour in a box under its centre, boosts saturation, and — with tone sizing — grows with
  * brightness (or with darkness on a light background) so the cover reads from a distance.
@@ -105,9 +113,9 @@ export function layoutWeave(
           const g = boosted(green);
           const b = boosted(blue);
           const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+          const toneScale = params.lightBackground ? 1.12 - 0.62 * luminance : 0.5 + 0.62 * luminance;
           const glyphSize = params.toneSize
-            ? fontSize *
-              (params.lightBackground ? 1.12 - 0.62 * luminance : 0.5 + 0.62 * luminance)
+            ? (fontSize * Math.round(toneScale * TONE_SIZE_STEPS)) / TONE_SIZE_STEPS
             : fontSize;
           if (count >= capacity) break;
           chars.push(glyph);

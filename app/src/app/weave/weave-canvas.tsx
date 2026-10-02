@@ -16,6 +16,7 @@ import { getUploadedCovers, resolveCoverSource } from "./cover-source";
 import { computeWeaveLayout, weaveLayoutCacheInput } from "./weave-compute";
 import { weaveFrameSize } from "./weave-draw";
 import { ensureWeaveFonts, weaveFontFamily } from "./weave-fonts";
+import type { WeaveLayout } from "./weave-layout";
 import { startLoadingSweep } from "./weave-loading";
 import { readWeaveParams } from "./weave-params";
 import {
@@ -27,6 +28,23 @@ import {
 } from "./weave-pipeline";
 import { clearWeaveCanvas, composeWeave, paintWeaveProgress, rasterizeWeave } from "./weave-raster";
 import styles from "./weave-canvas.module.css";
+
+type RasterInput = Readonly<{
+  "canvas.backing.height": number;
+  "canvas.backing.width": number;
+  "weave-layout": WeaveLayout | null;
+  "weave.underlay": number;
+}>;
+
+function sameRasterInput(left: RasterInput | null, right: RasterInput): boolean {
+  return (
+    left !== null &&
+    left["canvas.backing.height"] === right["canvas.backing.height"] &&
+    left["canvas.backing.width"] === right["canvas.backing.width"] &&
+    left["weave-layout"] === right["weave-layout"] &&
+    left["weave.underlay"] === right["weave.underlay"]
+  );
+}
 
 export function readRenderScale(value: unknown): number {
   return typeof value === "number" && Number.isFinite(value) ? Math.min(2, Math.max(1, value)) : 2;
@@ -51,7 +69,7 @@ export function WeaveCanvas(): React.JSX.Element {
   const [glyphCount, setGlyphCount] = React.useState(0);
   // Whether the canvas currently shows any weave (finished, in progress, or the previous one).
   const [painted, setPainted] = React.useState(false);
-  const rasterRun = React.useRef(0);
+  const wantedRaster = React.useRef<RasterInput | null>(null);
   const [composed, setComposed] = React.useState<WeaveRaster | null>(null);
   const initialZoomApplied = React.useRef(Boolean(source && params.glyphs.lyrics.trim()));
   React.useLayoutEffect(() => {
@@ -111,35 +129,35 @@ export function WeaveCanvas(): React.JSX.Element {
   );
   const layout = layoutState.status === "success" ? layoutState.result : null;
 
-  const rasterState = useToolcraftPipelinePass(
-    weaveRasterPass,
-    {
-      "canvas.backing.height": backingHeight,
-      "canvas.backing.width": backingWidth,
-      "weave-layout": layout,
-      "weave.underlay": params.underlay,
-    },
-    () => {
-      if (!layout) return null;
-      rasterRun.current += 1;
-      const run = rasterRun.current;
-      return rasterizeWeave({
-        backingHeight,
-        backingWidth,
-        cover: sample?.cover ?? null,
-        family,
-        layout,
-        // Only the newest weave paints its progress; superseded ones finish silently.
-        onSlice: (partial, drawn) => {
-          const canvas = canvasRef.current;
-          if (!canvas || rasterRun.current !== run) return;
-          paintWeaveProgress({ canvas, caption, drawn, layout, partial });
-          setPainted(true);
-        },
-        underlay: params.underlay,
-      });
-    },
-  );
+  const rasterInput = {
+    "canvas.backing.height": backingHeight,
+    "canvas.backing.width": backingWidth,
+    "weave-layout": layout,
+    "weave.underlay": params.underlay,
+  } as const;
+  // The raster the preview wants right now. A weave keeps running only while its own inputs are
+  // still wanted, so going back to an earlier value can reuse that weave instead of aborting it.
+  wantedRaster.current = rasterInput;
+  const rasterState = useToolcraftPipelinePass(weaveRasterPass, rasterInput, () => {
+    if (!layout) return null;
+    const isWanted = () => sameRasterInput(wantedRaster.current, rasterInput);
+    return rasterizeWeave({
+      backingHeight,
+      backingWidth,
+      cover: sample?.cover ?? null,
+      family,
+      isWanted,
+      layout,
+      // Only the wanted weave paints its progress.
+      onSlice: (partial, drawn) => {
+        const canvas = canvasRef.current;
+        if (!canvas || !isWanted()) return;
+        paintWeaveProgress({ canvas, caption, drawn, layout, partial });
+        setPainted(true);
+      },
+      underlay: params.underlay,
+    });
+  });
   const raster = rasterState.status === "success" ? rasterState.result : null;
   const fallbackWidth = Math.ceil(frameWidth * backingScale);
   const fallbackHeight = Math.ceil(frameHeight * backingScale);

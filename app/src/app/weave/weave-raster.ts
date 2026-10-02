@@ -22,10 +22,23 @@ export type WeaveRasterRequest = Readonly<{
   cover: CoverImage | null;
   family: string;
   layout: WeaveLayout;
+  /**
+   * Whether the preview still wants this weave. Checked at every pause: a superseded weave stops
+   * there instead of finishing, so a slider drag does not queue one full weave per step.
+   */
+  isWanted?: () => boolean;
   /** Called before each pause with the partly drawn backing, so the preview can weave in. */
   onSlice?: (partial: OffscreenCanvas, drawn: number) => void;
   underlay: number;
 }>;
+
+/** The rejection of a weave that a newer request replaced before it finished. */
+export class WeaveSupersededError extends Error {
+  constructor() {
+    super("A newer weave replaced this one.");
+    this.name = "AbortError";
+  }
+}
 
 function yieldToBrowser(): Promise<void> {
   return new Promise((resolve) => {
@@ -35,8 +48,9 @@ function yieldToBrowser(): Promise<void> {
 
 /** Draws the glyphs into an off-screen backing in ~12 ms slices so the editor stays responsive. */
 export async function rasterizeWeave(request: WeaveRasterRequest): Promise<WeaveRaster | null> {
-  const { backingHeight, backingWidth, cover, family, layout, onSlice, underlay } = request;
+  const { backingHeight, backingWidth, cover, family, isWanted, layout, onSlice, underlay } = request;
   if (layout.count === 0 || backingWidth <= 0 || backingHeight <= 0) return null;
+  if (isWanted && !isWanted()) throw new WeaveSupersededError();
   const canvas = createScratchCanvas(backingWidth, backingHeight);
   const context = getScratchContext(canvas);
   const scale = backingWidth / layout.width;
@@ -49,6 +63,7 @@ export async function rasterizeWeave(request: WeaveRasterRequest): Promise<Weave
     if (!document.hidden && performance.now() - sliceStarted >= RASTER_SLICE_MS) {
       onSlice?.(canvas, Math.min(layout.count, start + GLYPH_BATCH));
       await yieldToBrowser();
+      if (isWanted && !isWanted()) throw new WeaveSupersededError();
       sliceStarted = performance.now();
     }
   }
