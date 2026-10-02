@@ -15,7 +15,7 @@ import {
 } from "./weave-draw";
 import { getWeaveSceneRect } from "./weave-export";
 import { weaveFontFamily } from "./weave-fonts";
-import { layoutWeave, type SamplePixels } from "./weave-layout";
+import { layoutWeave, TONE_SIZE_STEPS, type SamplePixels } from "./weave-layout";
 import { hexLuminance, readWeaveParams, weaveExportBaseName } from "./weave-params";
 import { weavePipelineRegistration } from "./weave-pipeline";
 
@@ -103,6 +103,23 @@ describe("weave layout", () => {
     expect(sized.size[0]).not.toBe(sized.size[9]);
     expect(flat.size[0]).toBe(10);
     expect(flat.size[9]).toBe(10);
+  });
+
+  it("tone sizes snap to a few steps so the glyph cache can serve repeated draws", () => {
+    const pixels = new Uint8ClampedArray(100 * 100 * 4);
+    for (let index = 0; index < 100 * 100; index += 1) {
+      // A horizontal ramp: every column a different brightness.
+      const value = Math.round(((index % 100) / 99) * 255);
+      pixels.set([value, value, value, 255], index * 4);
+    }
+    const layout = layoutWeave({ height: 100, pixels, width: 100 }, glyphParams({ density: 50 }), measureSquare(2));
+    const sizes = new Set(Array.from(layout.size.subarray(0, layout.count)));
+    expect(sizes.size).toBeGreaterThan(10);
+    expect(sizes.size).toBeLessThanOrEqual(TONE_SIZE_STEPS);
+    for (const size of sizes) {
+      const steps = (size / layout.fontSize) * TONE_SIZE_STEPS;
+      expect(Math.abs(steps - Math.round(steps))).toBeLessThan(1e-4);
+    }
   });
 
   it("light background inverts tone sizing", () => {
