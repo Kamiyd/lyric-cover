@@ -230,3 +230,11 @@ Skip: Measured performance — not run. The protected delivery gate — not run,
 - Not changed: the default render scale (preview backing 4320 px at DPR 2) is runtime-owned and the performance contract forbids reducing backing resolution.
 - Result in the same browser check: one step settles in 0.53 s (longest block 79 ms); ten quick steps settle once after 1.46 s (longest block 81 ms).
 - Verification: `pnpm test` passed (747 passed, 9 existing optional skips) including a new tone-size snapping test; `pnpm test:browser` passed all 17 application browser tests. The protected `test:feature`, delivery gate and targeted performance iteration cannot run because `playwright.config.ts` no longer matches the signed manifest since the contributor-checks change; no protected performance evidence was produced.
+
+### Woven disc site icon
+
+- Active change: woven-disc-site-icon. Change ID: woven-disc-site-icon. Request: a site icon as simple as possible that shows the product, a CD in rainbow colours, made of the app's own woven type with no ground or other colour layered under it. Later localized asset addition.
+- The icon is a real weave: “LYRIC COVER ·” laid by the app's own `computeWeaveLayout` and `drawGlyphs` (Noto Sans SC Black, tone sizing, sampled colour, saturation 1.0, Tight text off) over a drawn CD picture: metallic silver with two broad mirrored rainbow sweeps (the colour design the user chose from an earlier drawn-disc draft), a paler hub and the centre hole. The picture only supplies colour; glyphs outside the disc and in the hole are left out and nothing else is drawn.
+- `public/favicon.ico` holds 16, 32 and 48 px weaves; `public/apple-touch-icon.png` is a 180 px weave on white using the app's light-background tone mode, because iOS requires an opaque home-screen icon. Browsers request both paths by default, so the signed `index.html` is unchanged.
+- Known limit accepted by the user: without a ground the glyphs cover about a tenth of the icon, so it reads faintly on light tab bars.
+- Verification: both files are served by the dev server (200, image types) and copied into a production build.
